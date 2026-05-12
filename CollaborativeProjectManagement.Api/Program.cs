@@ -1,14 +1,16 @@
+using CollaborativeProjectManagement.Application.Interfaces.Auth;
+using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Application.Services;
+using CollaborativeProjectManagement.Domain.Interfaces.Auth;
+using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
+using CollaborativeProjectManagement.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CollaborativeProjectManagement.Application.Interfaces.Auth;
-using CollaborativeProjectManagement.Infrastructure.Repositories;
-using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +51,11 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddScoped<IProjectsService, ProjectsService>();
+builder.Services.AddScoped<IProjectRolesRepository, ProjectRolesRepository>();
+builder.Services.AddScoped<IProjectRolesService, ProjectRolesService>();
+builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
 
 var app = builder.Build();
 

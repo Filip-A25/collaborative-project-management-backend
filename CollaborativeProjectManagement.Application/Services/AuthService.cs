@@ -27,12 +27,7 @@ namespace CollaborativeProjectManagement.Application.Services
         {
             if (await _userRepository.CheckIfEmailExistsAsync(request.Email))
             {
-                return new ServiceResponse
-                {
-                    Success = false,
-                    StatusCode = 409,
-                    Message = "An account with this email already exists."
-                };
+                return ServiceResponse.Conflict("An account with this email already exists.");
             }
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -50,14 +45,11 @@ namespace CollaborativeProjectManagement.Application.Services
                 Role = user.Role
             };
 
-            string authToken = GenerateJWTToken(user);
+            string? authToken = GenerateJWTToken(user);
 
-            return new ServiceResponse
-            {
-                Success = true,
-                StatusCode = 200,
-                Message = "User has been successfully registered."
-            };
+            if (authToken == null) return ServiceResponse.InternalServerError("Something went wrong while trying to register.");
+
+            return ServiceResponse.Ok("User has been successfully registered.");
         }
 
         public async Task<ServiceResponse<AuthResponseDTO?>> LoginUserAsync(LoginRequest request)
@@ -76,24 +68,14 @@ namespace CollaborativeProjectManagement.Application.Services
 
             if (requestedUser == null)
             {
-                return new ServiceResponse<AuthResponseDTO?>
-                {
-                    Success = false,
-                    StatusCode = 404,
-                    Message = "User not found."
-                };
+                return ServiceResponse<AuthResponseDTO?>.NotFound(null, "User not found.");
             }
 
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(request.Password, requestedUser.PasswordHash);
 
             if (!isPasswordCorrect)
             {
-                return new ServiceResponse<AuthResponseDTO?>
-                {
-                    Success = false,
-                    StatusCode = 401,
-                    Message = "Incorrect password has been entered."
-                };
+                return ServiceResponse<AuthResponseDTO?>.Unauthorized(null, "Incorrect password has been entered.");
             }
 
             string authToken = GenerateJWTToken(requestedUser);
@@ -112,16 +94,10 @@ namespace CollaborativeProjectManagement.Application.Services
                 Token = authToken
             };
 
-            return new ServiceResponse<AuthResponseDTO?>
-            {
-                Success = true,
-                StatusCode = 200,
-                Message = "User has successfully logged in.",
-                Data = authResult
-            };
+            return ServiceResponse<AuthResponseDTO?>.Ok(authResult, "User has successfully logged in.");
         }       
 
-        private string GenerateJWTToken(User user)
+        private string? GenerateJWTToken(User user)
         {
             string jwtSecretKey = _configuration["Jwt:Key"];
             string jwtIssuer = _configuration["Jwt:Issuer"];
@@ -129,7 +105,7 @@ namespace CollaborativeProjectManagement.Application.Services
 
             if (string.IsNullOrEmpty(jwtSecretKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
-                throw new Exception("Something went wrong while trying to register.");
+                return null;
             }
 
             var claims = new[]
