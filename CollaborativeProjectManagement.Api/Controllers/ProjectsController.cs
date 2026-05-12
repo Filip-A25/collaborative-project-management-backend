@@ -48,5 +48,33 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return StatusCode(500, new { Message = "Something went wrong while trying to delete the project." });
             }
         }
+
+        [HttpGet("{projectId}")]
+        public async Task<IActionResult> GetProject(Guid projectId)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<ProjectDTO?> response = await _projectsService.GetProjectAsync(projectId, userId);
+                return HandleResponse(response);
+            } catch
+            {
+                return StatusCode(500, new { Message = "Something went wrong while trying to fetch the project." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProjectsForUser()
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<List<ProjectDTO>?> response = await _projectsService.GetAllProjectsForUserAsync(userId);
+                return HandleResponse(response);
+            } catch
+            {
+                return StatusCode(500, new { Message = "Something went wrong while trying to fetch the projects." });
+            }
+        }
     }
 }

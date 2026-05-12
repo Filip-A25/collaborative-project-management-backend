@@ -10,5 +10,7 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task AddMemberToProjectAsync(ProjectMember member);
         Task<Project?> GetProjectWithMembersAsync(Guid projectId);
         Task<Project?> GetProjectAsync(Guid projectId);
+        Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId);
+        Task<List<Project>> GetAllProjectsForUserAsync(List<Guid> projectIds);
     }
 }

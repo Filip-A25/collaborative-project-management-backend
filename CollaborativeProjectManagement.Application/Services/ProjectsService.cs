@@ -62,7 +62,7 @@ namespace CollaborativeProjectManagement.Application.Services
 
         public async Task<ServiceResponse> DeleteProjectAsync(Guid projectId, Guid userId)
         {
-            Project project = await _projectsRepository.GetProjectAsync(projectId);
+            Project? project = await _projectsRepository.GetProjectAsync(projectId);
 
             if (project == null)
             {
@@ -70,11 +70,47 @@ namespace CollaborativeProjectManagement.Application.Services
             }
 
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageProject);
-            if (!userHasSufficientPermissions) return ServiceResponse.Forbidden("User does not have sufficient permissions to delete the project.");
+            if (!userHasSufficientPermissions)
+            {
+                return ServiceResponse.Forbidden("User does not have sufficient permissions to delete the project.");
+            }
 
             await _projectsRepository.DeleteProjectAsync(projectId);
 
             return ServiceResponse.NoContent("Project has been successfully deleted.");
+        }
+
+        public async Task<ServiceResponse<ProjectDTO?>> GetProjectAsync(Guid projectId, Guid userId)
+        {
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ViewProject);
+            if (!userHasSufficientPermissions)
+            {
+                return ServiceResponse<ProjectDTO?>.Forbidden(null, "User does not have sufficient permissions to view the project.");
+            }
+
+            Project? project = await _projectsRepository.GetProjectAsync(projectId);
+
+            if (project == null)
+            {
+                return ServiceResponse<ProjectDTO?>.NotFound(null, $"Project with ID {projectId} could not be found.");
+            }
+
+            ProjectDTO projectDto = ProjectDTO.FromEntity(project);
+            return ServiceResponse<ProjectDTO?>.Ok(projectDto, null);
+        }
+
+        public async Task<ServiceResponse<List<ProjectDTO>?>> GetAllProjectsForUserAsync(Guid userId)
+        {
+            List<Guid>? projectIds = await _projectsRepository.GetAllProjectIdsForUserAsync(userId);
+            if (projectIds == null || !projectIds.Any())
+            {
+                return ServiceResponse<List<ProjectDTO>?>.NotFound(null, "User does not have any projects.");
+            }
+
+            List<Project> projects = await _projectsRepository.GetAllProjectsForUserAsync(projectIds);
+            List<ProjectDTO> projectDtos = projects.Select(ProjectDTO.FromEntity).ToList();
+
+            return ServiceResponse<List<ProjectDTO>?>.Ok(projectDtos, null);
         }
 
         private async Task AssignCreatorRoleToUser(Guid projectId, Guid userId)

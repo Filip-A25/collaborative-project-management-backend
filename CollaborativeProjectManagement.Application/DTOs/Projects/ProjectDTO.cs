@@ -32,7 +32,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
             Currency = project.Currency,
             CreatedAt = project.CreatedAt,
             UpdatedAt = project.UpdatedAt,
-            ProjectMembers = project.ProjectMembers.Select(ProjectMemberDTO.FromEntity).ToList()
+            ProjectMembers = project.ProjectMembers.Select(member => ProjectMemberDTO.FromEntity(member)).ToList()
         };
     }
 }

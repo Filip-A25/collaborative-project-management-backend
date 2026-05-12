@@ -2,7 +2,6 @@
 using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
-using CollaborativeProjectManagement.Domain.Entities.Projects;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;

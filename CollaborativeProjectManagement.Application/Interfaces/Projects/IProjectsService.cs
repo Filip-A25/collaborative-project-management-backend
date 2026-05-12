@@ -7,5 +7,7 @@ namespace CollaborativeProjectManagement.Application.Interfaces.Projects
     {
         Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request);
         Task<ServiceResponse> DeleteProjectAsync(Guid projectId, Guid userId);
+        Task<ServiceResponse<ProjectDTO?>> GetProjectAsync(Guid projectId, Guid userId);
+        Task<ServiceResponse<List<ProjectDTO>?>> GetAllProjectsForUserAsync(Guid userId);
     }
 }
