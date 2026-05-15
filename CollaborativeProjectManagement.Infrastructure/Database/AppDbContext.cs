@@ -39,6 +39,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             {
                 builder.HasIndex(rolePermission => new { rolePermission.ProjectRoleId, rolePermission.PermissionId }).IsUnique();
             });
+            modelBuilder.Entity<ProjectMember>(builder =>
+            {
+                builder.HasIndex(projectMember => new { projectMember.ProjectId, projectMember.UserId }).IsUnique();
+            });
         }
     }
 }
