@@ -23,7 +23,7 @@ namespace CollaborativeProjectManagement.Application.Services
         public async Task<ServiceResponse<ProjectRoleDTO?>> CreateProjectRoleAsync(Guid userId, CreateProjectRoleRequest request)
         {
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageRoles);
-            if (!userHasSufficientPermissions) return ServiceResponse<ProjectRoleDTO?>.Forbidden(null, "User does not have sufficient permissions to manage project roles.");
+            if (!userHasSufficientPermissions) return ServiceResponse<ProjectRoleDTO?>.Forbidden(null, ResponseMessage.ProjectRoles.RolesManageError);
 
             var newProjectRole = new ProjectRole
             {
