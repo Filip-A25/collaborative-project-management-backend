@@ -30,7 +30,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse<ProjectRoleDTO?>(response);
             } catch
             {
-                return StatusCode(500, "Something went wrong while trying to create a project role.");
+                return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreateError);
             }
         }
 
@@ -44,7 +44,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             } catch
             {
-                return StatusCode(500, "Something went wrong while trying to delete a project role.");
+                return StatusCode(500, ResponseMessage.ProjectRoles.InternalDeleteError);
             }
         }
 
@@ -58,7 +58,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             } catch
             {
-                return StatusCode(500, "Something went wrong while trying to add permissions to a project role.");
+                return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreatePermissionsError);
             }
         }
     }

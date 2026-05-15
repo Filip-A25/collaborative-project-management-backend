@@ -31,7 +31,7 @@ namespace CollaborativeProjectManagement.Application.Services
 
             if (userRole != UserRole.Admin)
             {
-                return ServiceResponse<ProjectDTO?>.Forbidden(null, "User has to be an Admin to create a project.");
+                return ServiceResponse<ProjectDTO?>.Forbidden(null, ResponseMessage.Projects.AuthorizationError);
             }
 
             var newProject = new Project(request.Name, userId, request.Description, ProjectStatus.Planning, request.StartDate, request.EndDate, request.Currency, request.BudgetAmount);
@@ -66,18 +66,18 @@ namespace CollaborativeProjectManagement.Application.Services
 
             if (project == null)
             {
-                return ServiceResponse.NotFound($"Project with id ${projectId} does not exist.");
+                return ServiceResponse.NotFound(ResponseMessage.Projects.ProjectNotFound);
             }
 
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageProject);
             if (!userHasSufficientPermissions)
             {
-                return ServiceResponse.Forbidden("User does not have sufficient permissions to delete the project.");
+                return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectRoleDeleteError);
             }
 
             await _projectsRepository.DeleteProjectAsync(projectId);
 
-            return ServiceResponse.NoContent("Project has been successfully deleted.");
+            return ServiceResponse.NoContent(ResponseMessage.Projects.DeleteSuccess);
         }
 
         public async Task<ServiceResponse<ProjectDTO?>> GetProjectAsync(Guid projectId, Guid userId)
@@ -85,14 +85,14 @@ namespace CollaborativeProjectManagement.Application.Services
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ViewProject);
             if (!userHasSufficientPermissions)
             {
-                return ServiceResponse<ProjectDTO?>.Forbidden(null, "User does not have sufficient permissions to view the project.");
+                return ServiceResponse<ProjectDTO?>.Forbidden(null, ResponseMessage.Projects.ProjectRoleViewError);
             }
 
             Project? project = await _projectsRepository.GetProjectAsync(projectId);
 
             if (project == null)
             {
-                return ServiceResponse<ProjectDTO?>.NotFound(null, $"Project with ID {projectId} could not be found.");
+                return ServiceResponse<ProjectDTO?>.NotFound(null, ResponseMessage.Projects.ProjectNotFound);
             }
 
             ProjectDTO projectDto = ProjectDTO.FromEntity(project);
@@ -104,7 +104,7 @@ namespace CollaborativeProjectManagement.Application.Services
             List<Guid>? projectIds = await _projectsRepository.GetAllProjectIdsForUserAsync(userId);
             if (projectIds == null || !projectIds.Any())
             {
-                return ServiceResponse<List<ProjectDTO>?>.NotFound(null, "User does not have any projects.");
+                return ServiceResponse<List<ProjectDTO>?>.NotFound(null, ResponseMessage.Projects.ProjectsDontExist);
             }
 
             List<Project> projects = await _projectsRepository.GetAllProjectsForUserAsync(projectIds);

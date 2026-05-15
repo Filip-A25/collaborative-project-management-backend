@@ -48,21 +48,21 @@ namespace CollaborativeProjectManagement.Application.Services
         public async Task<ServiceResponse> AddProjectRolePermissionsAsync(Guid userId, int roleId, AddProjectRolePermissionsRequest request)
         {
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageRoles);
-            if (!userHasSufficientPermissions) return ServiceResponse.Forbidden("User does not have sufficient permissions to manage project roles.");
+            if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectRoles.RolesManageError);
 
             await AssignPermissionsToRole(roleId, request.PermissionIds);
 
-            return ServiceResponse.Ok("Successfully added permissions to the role.");
+            return ServiceResponse.Ok(ResponseMessage.ProjectRoles.AddPermissionsSuccess);
         }
 
         public async Task<ServiceResponse> DeleteProjectRolesAsync(List<int> projectRoleIds, Guid projectId, Guid userId)
         {
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageRoles);
-            if (!userHasSufficientPermissions) return ServiceResponse.Forbidden("User does not have sufficient permissions to manage project roles.");
+            if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectRoles.RolesManageError);
 
             await _projectRolesRepository.DeleteProjectRolesAsync(projectRoleIds, projectId);
 
-            return ServiceResponse.NoContent("Project roles have been successfully deleted.");
+            return ServiceResponse.NoContent(ResponseMessage.ProjectRoles.DeleteBatchSuccess);
         }
 
         public async Task<ProjectRole> AddCreatorRole(Guid projectId, Guid creatorId)

@@ -17,6 +17,8 @@ namespace CollaborativeProjectManagement.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
+        private const string EMAIL_FORMAT_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
         public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
@@ -27,7 +29,7 @@ namespace CollaborativeProjectManagement.Application.Services
         {
             if (await _userRepository.CheckIfEmailExistsAsync(request.Email))
             {
-                return ServiceResponse.Conflict("An account with this email already exists.");
+                return ServiceResponse.Conflict(ResponseMessage.Auth.RegisterConflict);
             }
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -47,14 +49,14 @@ namespace CollaborativeProjectManagement.Application.Services
 
             string? authToken = GenerateJWTToken(user);
 
-            if (authToken == null) return ServiceResponse.InternalServerError("Something went wrong while trying to register.");
+            if (authToken == null) return ServiceResponse.InternalServerError(ResponseMessage.Auth.InternalRegisterError);
 
-            return ServiceResponse.Ok("User has been successfully registered.");
+            return ServiceResponse.Ok(ResponseMessage.Auth.RegisterSuccess);
         }
 
         public async Task<ServiceResponse<AuthResponseDTO?>> LoginUserAsync(LoginRequest request)
         {
-            bool isEmailLogin = Regex.IsMatch(request.EmailOrUsername, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+            bool isEmailLogin = Regex.IsMatch(request.EmailOrUsername, EMAIL_FORMAT_REGEX);
 
             User? requestedUser = null;
 
@@ -68,14 +70,14 @@ namespace CollaborativeProjectManagement.Application.Services
 
             if (requestedUser == null)
             {
-                return ServiceResponse<AuthResponseDTO?>.NotFound(null, "User not found.");
+                return ServiceResponse<AuthResponseDTO?>.NotFound(null, ResponseMessage.Auth.UserNotFound);
             }
 
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(request.Password, requestedUser.PasswordHash);
 
             if (!isPasswordCorrect)
             {
-                return ServiceResponse<AuthResponseDTO?>.Unauthorized(null, "Incorrect password has been entered.");
+                return ServiceResponse<AuthResponseDTO?>.Unauthorized(null, ResponseMessage.Auth.IncorrectPassword);
             }
 
             string authToken = GenerateJWTToken(requestedUser);
@@ -94,7 +96,7 @@ namespace CollaborativeProjectManagement.Application.Services
                 Token = authToken
             };
 
-            return ServiceResponse<AuthResponseDTO?>.Ok(authResult, "User has successfully logged in.");
+            return ServiceResponse<AuthResponseDTO?>.Ok(authResult, ResponseMessage.Auth.LoginSuccess);
         }       
 
         private string? GenerateJWTToken(User user)

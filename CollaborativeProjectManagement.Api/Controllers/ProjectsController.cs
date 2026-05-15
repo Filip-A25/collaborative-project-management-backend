@@ -31,7 +31,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { message = "Something went wrong while creating a project." });
+                return StatusCode(500, new { message = ResponseMessage.Projects.InternalCreateError });
             }
         }
 
@@ -45,7 +45,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             } catch
             {
-                return StatusCode(500, new { Message = "Something went wrong while trying to delete the project." });
+                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalDeleteError });
             }
         }
 
@@ -59,7 +59,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             } catch
             {
-                return StatusCode(500, new { Message = "Something went wrong while trying to fetch the project." });
+                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalFetchError });
             }
         }
 
@@ -73,7 +73,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             } catch
             {
-                return StatusCode(500, new { Message = "Something went wrong while trying to fetch the projects." });
+                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalBatchFetchError });
             }
         }
     }
