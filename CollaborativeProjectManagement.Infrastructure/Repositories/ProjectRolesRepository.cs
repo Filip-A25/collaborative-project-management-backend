@@ -49,6 +49,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
             await _dbContext.ProjectRoles.Where(role => projectRoleIds.Contains(role.Id)).ExecuteDeleteAsync();
         }
 
+        public async Task<ProjectRole?> GetProjectRoleAsync(Guid projectId, int projectRoleId)
+        {
+            return await _dbContext.ProjectRoles.Where(role => projectId == role.ProjectId).FirstOrDefaultAsync(role => role.Id == projectRoleId);
+        }
+
         public async Task<ProjectRole?> GetProjectRoleWithPermissionsAsync(Guid projectId, int projectRoleId)
         {
             return await _dbContext.ProjectRoles.Where(role => role.ProjectId == projectId).Where(role => role.Id == projectRoleId).Include(role => role.Permissions).FirstOrDefaultAsync();

@@ -26,12 +26,19 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
                 })
             );
 
+            // Table relationships
             modelBuilder.Entity<ProjectRole>().HasOne<Project>().WithMany(project => project.ProjectRoles).HasForeignKey(role => role.ProjectId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<RolePermission>().HasOne(permission => permission.ProjectRole).WithMany().HasForeignKey(permission => permission.ProjectRoleId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectMember>().HasOne<Project>().WithMany(project => project.ProjectMembers).HasForeignKey(member => member.ProjectId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectMember>().HasOne(member => member.User).WithMany().HasForeignKey(member => member.UserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectRole>().HasMany(r => r.Permissions).WithMany().UsingEntity<RolePermission>();
             modelBuilder.Entity<ProjectMember>().HasOne(member => member.ProjectRole).WithMany().HasForeignKey(member => member.ProjectRoleId).OnDelete(DeleteBehavior.Restrict);
+
+            // Table constraints
+            modelBuilder.Entity<RolePermission>(builder =>
+            {
+                builder.HasIndex(rolePermission => new { rolePermission.ProjectRoleId, rolePermission.PermissionId }).IsUnique();
+            });
         }
     }
 }

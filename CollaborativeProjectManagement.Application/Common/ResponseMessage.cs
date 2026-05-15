@@ -41,6 +41,7 @@
             public const string InternalCreateError = "Something went wrong while trying to create a project role.";
             public const string InternalDeleteError = "Something went wrong while trying to delete a project role.";
             public const string InternalCreatePermissionsError = "Something went wrong while trying to add permissions to a project role.";
+            public const string RoleNotFound = "Role could not be found.";
 
             // Unauthorized role errors
             public const string RolesManageError = "User does not have sufficient permissions to manage project roles.";

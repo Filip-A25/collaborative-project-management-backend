@@ -9,6 +9,7 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task AddRolePermissionsAsync(List<RolePermission> rolePermissionList);
         Task<List<PermissionEntity>?> GetProjectMemberRolePermissionsAsync(Guid projectId, Guid userId);
         Task DeleteProjectRolesAsync(List<int> projectRoleIds, Guid projectId);
+        Task<ProjectRole?> GetProjectRoleAsync(Guid projectId, int projectRoleId);
         Task<ProjectRole?> GetProjectRoleWithPermissionsAsync(Guid projectId, int projectRoleId);
     }
 }

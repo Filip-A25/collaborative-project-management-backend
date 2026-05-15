@@ -1,8 +1,9 @@
 ﻿using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
+using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
-using CollaborativeProjectManagement.Application.Interfaces.Projects;
+using static CollaborativeProjectManagement.Application.Common.ResponseMessage;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
@@ -49,6 +50,12 @@ namespace CollaborativeProjectManagement.Application.Services
         {
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageRoles);
             if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectRoles.RolesManageError);
+
+            ProjectRole? targetRole = await _projectRolesRepository.GetProjectRoleAsync(request.ProjectId, roleId);
+            if (targetRole == null)
+            {
+                return ServiceResponse.NotFound(ResponseMessage.ProjectRoles.RoleNotFound);
+            }
 
             await AssignPermissionsToRole(roleId, request.PermissionIds);
 
