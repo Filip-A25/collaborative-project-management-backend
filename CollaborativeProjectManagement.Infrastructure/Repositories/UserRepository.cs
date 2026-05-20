@@ -1,7 +1,7 @@
-﻿using CollaborativeProjectManagement.Infrastructure.Database;
-using CollaborativeProjectManagement.Domain.Entities.Auth;
-using Microsoft.EntityFrameworkCore;
+﻿using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
+using CollaborativeProjectManagement.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollaborativeProjectManagement.Infrastructure.Repositories
 {
@@ -43,7 +43,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
             return await _dbContext.Users.Where(u => u.Id == userId).Select(u => u.Role).FirstOrDefaultAsync();
         }
 
-        //For Projects layer
         public async Task<List<User>> GetUsersListByEmail(List<string> userEmails)
         {
             return await _dbContext.Users.Where(user => userEmails.Contains(user.Email)).ToListAsync();

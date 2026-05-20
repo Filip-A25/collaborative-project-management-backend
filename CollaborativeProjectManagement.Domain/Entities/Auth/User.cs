@@ -9,7 +9,6 @@ namespace CollaborativeProjectManagement.Domain.Entities.Auth
     }
 
     public class User
-
     {
         public Guid Id { get; set; }
         [MaxLength(100)]

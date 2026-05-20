@@ -4,6 +4,7 @@ using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollaborativeProjectManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260511191718_AddProjectMemberUserForeignKey")]
+    partial class AddProjectMemberUserForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,12 +198,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProjectId");
+
                     b.HasIndex("ProjectRoleId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("ProjectId", "UserId")
-                        .IsUnique();
 
                     b.ToTable("ProjectMembers");
                 });
@@ -256,8 +258,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("ProjectRoleId", "PermissionId")
-                        .IsUnique();
+                    b.HasIndex("ProjectRoleId");
 
                     b.ToTable("RolePermissions");
                 });

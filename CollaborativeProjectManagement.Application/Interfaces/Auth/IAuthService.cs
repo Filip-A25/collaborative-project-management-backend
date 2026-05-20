@@ -1,5 +1,5 @@
-﻿using CollaborativeProjectManagement.Application.DTOs.Auth;
-using CollaborativeProjectManagement.Application.Common;
+﻿using CollaborativeProjectManagement.Application.Common;
+using CollaborativeProjectManagement.Application.DTOs.Auth;
 
 namespace CollaborativeProjectManagement.Application.Interfaces.Auth
 {
