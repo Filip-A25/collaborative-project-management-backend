@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CollaborativeProjectManagement.Infrastructure.Repositories
 {
-    public class ProjectRolesRepository: IProjectRolesRepository
+    public class ProjectRolesRepository : IProjectRolesRepository
     {
-        private readonly AppDbContext _dbContext;          
+        private readonly AppDbContext _dbContext;
 
         public ProjectRolesRepository(AppDbContext dbContext)
         {
@@ -34,7 +34,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
         {
             await _dbContext.RolePermissions.AddRangeAsync(rolePermissionList);
             await _dbContext.SaveChangesAsync();
-        } 
+        }
 
         public async Task<List<PermissionEntity>?> GetProjectMemberRolePermissionsAsync(Guid projectId, Guid userId)
         {

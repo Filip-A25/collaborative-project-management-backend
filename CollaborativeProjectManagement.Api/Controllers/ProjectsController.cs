@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CollaborativeProjectManagement.Application.Interfaces.Projects;
-using CollaborativeProjectManagement.Application.DTOs.Projects;
-using CollaborativeProjectManagement.Application.Common;
+﻿using System.Security.Claims;
 using CollaborativeProjectManagement.Api.Controllers.Common;
-using System.Security.Claims;
+using CollaborativeProjectManagement.Application.Common;
+using CollaborativeProjectManagement.Application.DTOs.Projects;
+using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CollaborativeProjectManagement.Api.Controllers
 {
@@ -43,7 +43,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse response = await _projectsService.DeleteProjectAsync(projectId, userId);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, new { Message = ResponseMessage.Projects.InternalDeleteError });
             }
@@ -57,7 +58,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse<ProjectDTO?> response = await _projectsService.GetProjectAsync(projectId, userId);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, new { Message = ResponseMessage.Projects.InternalFetchError });
             }
@@ -71,7 +73,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse<List<ProjectDTO>?> response = await _projectsService.GetAllProjectsForUserAsync(userId);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, new { Message = ResponseMessage.Projects.InternalBatchFetchError });
             }

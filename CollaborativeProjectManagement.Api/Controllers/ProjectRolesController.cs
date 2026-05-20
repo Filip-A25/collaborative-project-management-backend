@@ -1,10 +1,10 @@
-﻿using CollaborativeProjectManagement.Api.Controllers.Common;
+﻿using System.Security.Claims;
+using CollaborativeProjectManagement.Api.Controllers.Common;
 using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CollaborativeProjectManagement.Api.Controllers
 {
@@ -25,10 +25,11 @@ namespace CollaborativeProjectManagement.Api.Controllers
         {
             try
             {
-                Guid userId =  Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse<ProjectRoleDTO?> response = await _projectRolesService.CreateProjectRoleAsync(userId, request);
                 return HandleResponse<ProjectRoleDTO?>(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreateError);
             }
@@ -42,7 +43,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse response = await _projectRolesService.DeleteProjectRolesAsync(request.ProjectRoleIds, request.ProjectId, userId);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, ResponseMessage.ProjectRoles.InternalDeleteError);
             }
@@ -56,7 +58,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse response = await _projectRolesService.AddProjectRolePermissionsAsync(userId, roleId, request);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreatePermissionsError);
             }

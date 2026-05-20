@@ -1,14 +1,14 @@
-﻿using CollaborativeProjectManagement.Domain.Entities.Projects;
-using CollaborativeProjectManagement.Application.Common;
+﻿using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
+using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Auth;
+using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
-using CollaborativeProjectManagement.Application.Interfaces.Projects;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
-    public class ProjectsService: IProjectsService
+    public class ProjectsService : IProjectsService
     {
         private readonly IProjectsRepository _projectsRepository;
         private readonly IUserRepository _userRepository;
@@ -47,7 +47,7 @@ namespace CollaborativeProjectManagement.Application.Services
             {
                 return ServiceResponse<ProjectDTO?>.Created(newProjectDto, null);
             }
-            
+
             List<ProjectRole> newProjectRoles = request.Roles.Select(role => new ProjectRole
             {
                 ProjectId = newProject.Id,

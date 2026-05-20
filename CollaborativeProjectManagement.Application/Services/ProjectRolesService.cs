@@ -7,7 +7,7 @@ using static CollaborativeProjectManagement.Application.Common.ResponseMessage;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
-    public class ProjectRolesService: IProjectRolesService
+    public class ProjectRolesService : IProjectRolesService
     {
         private readonly IProjectRolesRepository _projectRolesRepository;
         private readonly IProjectAuthorizationService _projectAuthorizationService;

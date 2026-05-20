@@ -1,14 +1,14 @@
-﻿using CollaborativeProjectManagement.Application.DTOs.Auth;
-using CollaborativeProjectManagement.Domain.Entities.Auth;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using CollaborativeProjectManagement.Application.Common;
+using CollaborativeProjectManagement.Application.DTOs.Auth;
 using CollaborativeProjectManagement.Application.Interfaces.Auth;
+using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
@@ -63,7 +63,8 @@ namespace CollaborativeProjectManagement.Application.Services
             if (isEmailLogin)
             {
                 requestedUser = await _userRepository.GetUserByEmailAsync(request.EmailOrUsername);
-            } else
+            }
+            else
             {
                 requestedUser = await _userRepository.GetUserByUsernameAsync(request.EmailOrUsername);
             }
@@ -97,7 +98,7 @@ namespace CollaborativeProjectManagement.Application.Services
             };
 
             return ServiceResponse<AuthResponseDTO?>.Ok(authResult, ResponseMessage.Auth.LoginSuccess);
-        }       
+        }
 
         private string? GenerateJWTToken(User user)
         {
@@ -121,7 +122,7 @@ namespace CollaborativeProjectManagement.Application.Services
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             double tokenExpiryTime = double.TryParse(_configuration["Jwt:ExpiryMinutes"], out double value) ? value : 60.0;
-            
+
             var token = new JwtSecurityToken(
                 issuer: jwtIssuer,
                 audience: jwtAudience,

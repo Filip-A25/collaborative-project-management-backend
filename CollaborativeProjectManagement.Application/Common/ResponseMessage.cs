@@ -10,7 +10,7 @@
             public const string RegisterConflict = "An account with this email already exists.";
             public const string UserNotFound = "User could not be found.";
             public const string IncorrectPassword = "Incorrect password entered.";
-            
+
             // Success messages
             public const string RegisterSuccess = "User has been successfully registered.";
             public const string LoginSuccess = "User has successfully logged in.";
@@ -33,7 +33,7 @@
 
             // Success messages
             public const string DeleteSuccess = "Project has been successfully deleted.";
-        }   
+        }
 
         public static class ProjectRoles
         {

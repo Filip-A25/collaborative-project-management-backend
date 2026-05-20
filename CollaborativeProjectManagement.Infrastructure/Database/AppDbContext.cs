@@ -1,7 +1,7 @@
-﻿using CollaborativeProjectManagement.Domain.Entities.Auth;
+﻿using System.Data;
+using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace CollaborativeProjectManagement.Infrastructure.Database
 {

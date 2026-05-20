@@ -1,3 +1,4 @@
+using System.Text;
 using CollaborativeProjectManagement.Application.Interfaces.Auth;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Application.Services;
@@ -10,11 +11,9 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

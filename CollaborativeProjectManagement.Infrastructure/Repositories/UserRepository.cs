@@ -1,7 +1,7 @@
-﻿using CollaborativeProjectManagement.Infrastructure.Database;
-using CollaborativeProjectManagement.Domain.Entities.Auth;
-using Microsoft.EntityFrameworkCore;
+﻿using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
+using CollaborativeProjectManagement.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace CollaborativeProjectManagement.Infrastructure.Repositories
 {

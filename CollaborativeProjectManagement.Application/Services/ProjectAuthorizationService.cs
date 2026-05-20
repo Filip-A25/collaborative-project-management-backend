@@ -1,10 +1,10 @@
-﻿using CollaborativeProjectManagement.Domain.Entities.Projects;
+﻿using CollaborativeProjectManagement.Application.Interfaces.Projects;
+using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
-using CollaborativeProjectManagement.Application.Interfaces.Projects;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
-    public class ProjectAuthorizationService: IProjectAuthorizationService
+    public class ProjectAuthorizationService : IProjectAuthorizationService
     {
         private readonly IProjectRolesRepository _projectRolesRepository;
 
@@ -18,7 +18,7 @@ namespace CollaborativeProjectManagement.Application.Services
             List<PermissionEntity>? userPermissions = await _projectRolesRepository.GetProjectMemberRolePermissionsAsync(projectId, userId);
 
             if (userPermissions == null) return false;
-            bool userHasSufficientPermissions = userPermissions.Any(permission => permission.Id == (int) permissionId);
+            bool userHasSufficientPermissions = userPermissions.Any(permission => permission.Id == (int)permissionId);
 
             return userHasSufficientPermissions;
         }

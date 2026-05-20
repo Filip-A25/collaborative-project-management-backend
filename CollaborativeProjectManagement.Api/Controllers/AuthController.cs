@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using CollaborativeProjectManagement.Application.Interfaces.Auth;
-using CollaborativeProjectManagement.Application.DTOs.Auth;
+﻿using CollaborativeProjectManagement.Api.Controllers.Common;
 using CollaborativeProjectManagement.Application.Common;
-using CollaborativeProjectManagement.Api.Controllers.Common;
+using CollaborativeProjectManagement.Application.DTOs.Auth;
+using CollaborativeProjectManagement.Application.Interfaces.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CollaborativeProjectManagement.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/users")]
-    public class AuthController: BaseController
+    public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
-                
+
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -26,9 +26,10 @@ namespace CollaborativeProjectManagement.Api.Controllers
             {
                 ServiceResponse response = await _authService.RegisterUserAsync(request);
                 return HandleResponse(response);
-            } catch
+            }
+            catch
             {
-                return StatusCode(500, new {Message = "Something went wrong while trying to register."});
+                return StatusCode(500, new { Message = "Something went wrong while trying to register." });
             }
         }
 
@@ -40,10 +41,11 @@ namespace CollaborativeProjectManagement.Api.Controllers
             {
                 ServiceResponse<AuthResponseDTO?> response = await _authService.LoginUserAsync(request);
                 return HandleResponse<AuthResponseDTO?>(response);
-            } catch
+            }
+            catch
             {
                 return StatusCode(500, new { Message = "Something went wrong while trying to login." });
             }
-        } 
+        }
     }
 }

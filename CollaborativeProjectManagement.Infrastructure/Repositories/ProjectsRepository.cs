@@ -1,11 +1,11 @@
 ﻿using CollaborativeProjectManagement.Domain.Entities.Projects;
+using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 
 namespace CollaborativeProjectManagement.Infrastructure.Repositories
 {
-    public class ProjectsRepository: IProjectsRepository
+    public class ProjectsRepository : IProjectsRepository
     {
         private readonly AppDbContext _dbContext;
 

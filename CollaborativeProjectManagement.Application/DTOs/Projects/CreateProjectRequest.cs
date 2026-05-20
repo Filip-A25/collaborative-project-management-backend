@@ -1,5 +1,5 @@
-﻿using CollaborativeProjectManagement.Domain.Entities.Projects;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using CollaborativeProjectManagement.Domain.Entities.Projects;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {

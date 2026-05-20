@@ -17,7 +17,7 @@ namespace CollaborativeProjectManagement.Domain.Entities.Projects
         public User User { get; private set; }
         public ProjectRole? ProjectRole { get; private set; }
 
-        public ProjectMember(Guid userId, Guid projectId, int projectRoleId) 
+        public ProjectMember(Guid userId, Guid projectId, int projectRoleId)
         {
             UserId = userId;
             ProjectId = projectId;

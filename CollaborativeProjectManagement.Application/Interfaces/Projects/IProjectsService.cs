@@ -1,5 +1,5 @@
-﻿using CollaborativeProjectManagement.Application.DTOs.Projects;
-using CollaborativeProjectManagement.Application.Common;
+﻿using CollaborativeProjectManagement.Application.Common;
+using CollaborativeProjectManagement.Application.DTOs.Projects;
 
 namespace CollaborativeProjectManagement.Application.Interfaces.Projects
 {
