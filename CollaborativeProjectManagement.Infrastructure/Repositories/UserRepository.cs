@@ -28,6 +28,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
             return user != null;
         }
 
+        public async Task<User?> GetUserById(Guid userId)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(user => user.Id ==userId);
+        }
+
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();

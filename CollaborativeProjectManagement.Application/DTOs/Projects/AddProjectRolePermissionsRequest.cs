@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {
