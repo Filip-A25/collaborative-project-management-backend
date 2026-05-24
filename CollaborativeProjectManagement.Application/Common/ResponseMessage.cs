@@ -50,5 +50,26 @@
             public const string AddPermissionsSuccess = "Successfully added permissions to the role.";
             public const string DeleteBatchSuccess = "Project roles have been successfully deleted.";
         }
+
+        public static class ProjectInvites
+        {
+            // Error messages
+            public const string InternalCreateError = "Something went wrong while trying to invite members to a project.";
+            public const string UsersNotFound = "Users could not be found.";
+            public const string InternalUpdateError = "Something went wrong while trying to update invite accepted state.";
+            public const string InternalDeleteError = "Something went wrong while trying to delete a project invite.";
+            public const string Expired = "Unable to update the invite. Invite has expired.";
+            public const string InternalFetchError = "Something went wrong while trying to fetch the invites.";
+
+            // Unauthorized invites errors
+            public const string InvitesCreateError = "User does not have sufficient permissions to create invites.";
+            public const string InvitesDeleteError = "User does not have sufficient permissions to delete invites.";
+            public const string InvitesFetchError = "User does not have sufficient permissions to fetch project invites.";
+
+            // Success messages
+            public const string CreateSuccess = "User has been invited to a project.";
+            public const string DeleteSuccess = "Invite has been successfully deleted.";
+            public const string AcceptSuccess = "Invite has been successfully accepted.";
+        }
     }
 }

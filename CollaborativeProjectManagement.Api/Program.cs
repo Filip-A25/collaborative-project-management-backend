@@ -55,6 +55,8 @@ builder.Services.AddScoped<IProjectsService, ProjectsService>();
 builder.Services.AddScoped<IProjectRolesRepository, ProjectRolesRepository>();
 builder.Services.AddScoped<IProjectRolesService, ProjectRolesService>();
 builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
+builder.Services.AddScoped<IProjectInvitesService, ProjectInvitesService>();
+builder.Services.AddScoped<IProjectInvitesRepository, ProjectInvitesRepository>();
 
 var app = builder.Build();
 

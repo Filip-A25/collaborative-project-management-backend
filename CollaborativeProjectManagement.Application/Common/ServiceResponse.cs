@@ -14,6 +14,7 @@ namespace CollaborativeProjectManagement.Application.Common
         public static ServiceResponse Conflict(string? message) => new() { Success = false, StatusCode = HttpStatusCode.Conflict, Message = message };
         public static ServiceResponse InternalServerError(string? message) => new() { Success = false, StatusCode = HttpStatusCode.InternalServerError, Message = message };
         public static ServiceResponse NoContent(string? message) => new() { Success = false, StatusCode = HttpStatusCode.NoContent, Message = message };
+        public static ServiceResponse Gone(string? message) => new() { Success = false, StatusCode = HttpStatusCode.Gone, Message = message };
     }
 
     public class ServiceResponse<T> : ServiceResponse

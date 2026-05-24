@@ -3,7 +3,6 @@ using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
-using static CollaborativeProjectManagement.Application.Common.ResponseMessage;
 
 namespace CollaborativeProjectManagement.Application.Services
 {
