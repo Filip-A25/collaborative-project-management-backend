@@ -71,5 +71,20 @@
             public const string DeleteSuccess = "Invite has been successfully deleted.";
             public const string AcceptSuccess = "Invite has been successfully accepted.";
         }
+
+        public static class Tasks
+        {
+            // Error messages
+            public const string TasksManageError = "User does not have sufficient permissions to manage tasks.";
+            public const string InternalCreateError = "Something went wrong while trying to create a task.";
+            public const string InternalDeleteError = "Something went wrong while trying to delete a task.";
+            public const string InternalFetchError = "Something went wrong while trying to fetch tasks.";
+            public const string ProjectTasksNotFound = "No tasks were found for the project.";
+            public const string MemberNotFound = "Assigned user is not a member in this project.";
+
+            // Success messages
+            public const string CreateSuccess = "Task has been successfully created.";
+            public const string DeleteSuccess = "Task has been successfully deleted.";
+        }
     }
 }

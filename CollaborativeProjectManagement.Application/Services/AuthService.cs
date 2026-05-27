@@ -40,6 +40,7 @@ namespace CollaborativeProjectManagement.Application.Services
 
             UserDTO userData = new UserDTO
             {
+                Id = user.Id,
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -84,6 +85,7 @@ namespace CollaborativeProjectManagement.Application.Services
             string authToken = GenerateJWTToken(requestedUser);
             UserDTO user = new UserDTO
             {
+                Id = requestedUser.Id,
                 FirstName = requestedUser.FirstName,
                 LastName = requestedUser.LastName,
                 Username = requestedUser.Username,

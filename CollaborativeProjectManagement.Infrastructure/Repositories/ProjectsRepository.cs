@@ -66,5 +66,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
         {
             return await _dbContext.Projects.Where(project => projectIds.Contains(project.Id)).Include(project => project.ProjectMembers).ThenInclude(member => member.User).Include(project => project.ProjectMembers).ThenInclude(member => member.ProjectRole).ThenInclude(role => role.Permissions).ToListAsync();
         }
+
+        public async Task<List<ProjectMember>?> GetAllProjectMembers(Guid projectId)
+        {
+            return await _dbContext.ProjectMembers.Where(projectMember => projectMember.ProjectId == projectId).ToListAsync();
+        }
     }
 }

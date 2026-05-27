@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CollaborativeProjectManagement.Application.Interfaces.Tasks;
+using CollaborativeProjectManagement.Domain.Interfaces.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +59,8 @@ builder.Services.AddScoped<IProjectRolesService, ProjectRolesService>();
 builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
 builder.Services.AddScoped<IProjectInvitesService, ProjectInvitesService>();
 builder.Services.AddScoped<IProjectInvitesRepository, ProjectInvitesRepository>();
+builder.Services.AddScoped<ITasksService, TasksService>();
+builder.Services.AddScoped<ITasksRepository, TasksRepository>();
 
 var app = builder.Build();
 
