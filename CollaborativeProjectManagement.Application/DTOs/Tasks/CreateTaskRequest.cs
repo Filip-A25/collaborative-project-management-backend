@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Tasks
 {
     public class CreateProjectTaskRequest
     {
+        [FromRoute]
+        public Guid ProjectId { get; set; }
         [Required]
         [MaxLength(300)]
         public required string Title { get; set; }

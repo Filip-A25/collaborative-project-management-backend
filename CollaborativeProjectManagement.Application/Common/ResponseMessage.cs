@@ -30,6 +30,7 @@
             // Unauthorized role errors
             public const string ProjectRoleDeleteError = "User does not have sufficient permissions to delete the project.";
             public const string ProjectRoleViewError = "User does not have sufficient permissions to view the project.";
+            public const string ProjectManageError = "User does not have sufficient permissions to manage this project.";
 
             // Success messages
             public const string DeleteSuccess = "Project has been successfully deleted.";
@@ -81,6 +82,11 @@
             public const string InternalFetchError = "Something went wrong while trying to fetch tasks.";
             public const string ProjectTasksNotFound = "No tasks were found for the project.";
             public const string MemberNotFound = "Assigned user is not a member in this project.";
+            public const string TaskNotFound = "Task not found.";
+            public const string InternalTypeCreateError = "Something went wrong while trying to create a task type.";
+
+            // Unauthorized tasks errros
+            public const string ViewTasksError = "User does not have sufficient permissions to view tasks in this project.";
 
             // Success messages
             public const string CreateSuccess = "Task has been successfully created.";
