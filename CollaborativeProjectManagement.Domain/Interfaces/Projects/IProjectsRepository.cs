@@ -8,6 +8,7 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task<ProjectRole> CreateProjectRoleAsync(ProjectRole projectRole);
         Task DeleteProjectAsync(Guid projectId);
         Task AddMemberToProjectAsync(ProjectMember member);
+        Task<Project?> GetProjectWithFullMembersAsync(Guid projectId);
         Task<Project?> GetProjectWithMembersAsync(Guid projectId);
         Task<Project?> GetProjectAsync(Guid projectId);
         Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId);

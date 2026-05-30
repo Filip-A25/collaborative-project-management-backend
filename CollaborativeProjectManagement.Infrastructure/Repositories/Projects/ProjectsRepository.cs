@@ -3,7 +3,7 @@ using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CollaborativeProjectManagement.Infrastructure.Repositories
+namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 {
     public class ProjectsRepository : IProjectsRepository
     {
@@ -41,7 +41,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Project?> GetProjectWithMembersAsync(Guid projectId)
+        public async Task<Project?> GetProjectWithFullMembersAsync(Guid projectId)
         {
             return await _dbContext.Projects
                 .Include(project => project.ProjectMembers)
@@ -52,9 +52,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
-        public async Task<Project?> GetProjectAsync(Guid projectId)
+        public async Task<Project?> GetProjectWithMembersAsync(Guid projectId)
         {
             return await _dbContext.Projects.Include(project => project.ProjectMembers).ThenInclude(member => member.User).FirstOrDefaultAsync(project => project.Id == projectId);
+        }
+
+        public async Task<Project?> GetProjectAsync(Guid projectId)
+        {
+            return await _dbContext.Projects.FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
         public async Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId)

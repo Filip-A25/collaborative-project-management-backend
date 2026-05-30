@@ -2,13 +2,12 @@
 using CollaborativeProjectManagement.Application.DTOs.Tasks;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Tasks;
-using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Tasks;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Tasks;
 
-namespace CollaborativeProjectManagement.Application.Services
+namespace CollaborativeProjectManagement.Application.Services.Tasks
 {
     public class TasksService : ITasksService
     {
@@ -81,32 +80,6 @@ namespace CollaborativeProjectManagement.Application.Services
 
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(task);
             return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, null);
-        }
-
-        public async Task<ServiceResponse<TaskType?>> CreateTaskTypeAsync(Guid userId, CreateTaskTypeRequest request)
-        {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageProject);
-            if (!userHasSufficientPermissions) return ServiceResponse<TaskType?>.Forbidden(null, ResponseMessage.Projects.ProjectManageError);
-
-            TaskType newType = new TaskType
-            {
-                ProjectId = request.ProjectId,
-                Title = request.Title
-            };
-
-            await _tasksRepository.CreateTaskTypeAsync(newType);
-
-            return ServiceResponse<TaskType?>.Ok(newType, null);
-        }
-
-        public async Task<ServiceResponse> DeleteTaskTypeAsync(Guid userId, DeleteTaskTypeRequest request)
-        {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageProject);
-            if (!userHasSufficientPermissions) return ServiceResponse<TaskType?>.Forbidden(null, ResponseMessage.Projects.ProjectManageError);
-
-            await _tasksRepository.DeleteTaskTypeAsync(request.ProjectId, request.TypeId);
-
-            return ServiceResponse.NoContent("");
         }
     }
 }

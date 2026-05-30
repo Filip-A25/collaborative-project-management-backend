@@ -3,7 +3,7 @@ using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CollaborativeProjectManagement.Infrastructure.Repositories
+namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 {
     public class ProjectRolesRepository : IProjectRolesRepository
     {

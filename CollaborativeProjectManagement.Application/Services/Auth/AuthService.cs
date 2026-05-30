@@ -10,7 +10,7 @@ using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CollaborativeProjectManagement.Application.Services
+namespace CollaborativeProjectManagement.Application.Services.Auth
 {
     public class AuthService : IAuthService
     {

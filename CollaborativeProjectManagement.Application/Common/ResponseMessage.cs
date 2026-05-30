@@ -2,6 +2,11 @@
 {
     public static class ResponseMessage
     {
+        public static class Common
+        {
+            public const string InternalError = "Unexpected error occured. Please try again.";
+        }
+
         public static class Auth
         {
             // Error messages
@@ -77,13 +82,9 @@
         {
             // Error messages
             public const string TasksManageError = "User does not have sufficient permissions to manage tasks.";
-            public const string InternalCreateError = "Something went wrong while trying to create a task.";
-            public const string InternalDeleteError = "Something went wrong while trying to delete a task.";
-            public const string InternalFetchError = "Something went wrong while trying to fetch tasks.";
             public const string ProjectTasksNotFound = "No tasks were found for the project.";
             public const string MemberNotFound = "Assigned user is not a member in this project.";
             public const string TaskNotFound = "Task not found.";
-            public const string InternalTypeCreateError = "Something went wrong while trying to create a task type.";
 
             // Unauthorized tasks errros
             public const string ViewTasksError = "User does not have sufficient permissions to view tasks in this project.";
@@ -91,6 +92,17 @@
             // Success messages
             public const string CreateSuccess = "Task has been successfully created.";
             public const string DeleteSuccess = "Task has been successfully deleted.";
+        }
+
+        public static class TaskTypes
+        {
+            // Error messages
+            public const string TaskTypeNotFound = "Task type not found.";
+
+            // Success messages
+            public const string CreateSuccess = "Task type has been successfully created.";
+            public const string DeleteSuccess = "Task type has been successfully deleted.";
+            public const string UpdateSuccess = "Task type has been successfully updated.";
         }
     }
 }

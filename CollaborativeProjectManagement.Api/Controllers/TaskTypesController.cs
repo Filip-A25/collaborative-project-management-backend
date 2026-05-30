@@ -3,30 +3,32 @@ using CollaborativeProjectManagement.Api.Controllers.Common;
 using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Tasks;
 using CollaborativeProjectManagement.Application.Interfaces.Tasks;
+using CollaborativeProjectManagement.Domain.Entities.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace CollaborativeProjectManagement.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/v1/projects/{projectId}/tasks")]
-    public class TasksController : BaseController
+    [Route("api/v1/projects/{projectId}/task-types")]
+    public class TaskTypesController : BaseController
     {
-        private readonly ITasksService _tasksService;
-
-        public TasksController(ITasksService tasksService)
+        private readonly ITaskTypesService _taskTypesService;
+        
+        public TaskTypesController(ITaskTypesService taskTypesService)
         {
-            _tasksService = tasksService;
+            _taskTypesService = taskTypesService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(CreateProjectTaskRequest request)
+        public async Task<IActionResult> CreateTaskType(Guid projectId, CreateTaskTypeRequest request)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse<ProjectTaskDTO?> response = await _tasksService.CreateTaskAsync(userId, request);
+                ServiceResponse<TaskType?> response = await _taskTypesService.CreateTaskTypeAsync(userId, projectId, request);
                 return HandleResponse(response);
             }
             catch
@@ -35,13 +37,13 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteTask(DeleteTaskRequest request)
+        [HttpDelete("{typeId}")]
+        public async Task<IActionResult> DeleteTaskType(DeleteTaskTypeRequest request)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse response = await _tasksService.DeleteTaskAsync(userId, request);
+                ServiceResponse response = await _taskTypesService.DeleteTaskTypeAsync(userId, request);
                 return HandleResponse(response);
             }
             catch
@@ -50,13 +52,13 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllProjectTasks(Guid projectId)
+        [HttpPatch("{typeId}")]
+        public async Task<IActionResult> ChangeTaskTypeTitle(Guid projectId, int typeId, ChangeTaskTypeTitleRequest request)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse<List<ProjectTaskDTO>?> response = await _tasksService.GetAllProjectTasksAsync(userId, projectId);
+                ServiceResponse<TaskType?> response = await _taskTypesService.ChangeTaskTypeTitleAsync(userId, projectId, typeId, request);
                 return HandleResponse(response);
             }
             catch
@@ -65,13 +67,13 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
         }
 
-        [HttpGet("{taskId}")]
-        public async Task<IActionResult> GetProjectById(Guid projectId, Guid taskId)
+        [HttpGet("{typeId}")]
+        public async Task<IActionResult> GetTypeById(Guid projectId, int typeId)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse<ProjectTaskDTO?> response = await _tasksService.GetTaskByIdAsync(userId, projectId, taskId);
+                ServiceResponse<TaskType?> response = await _taskTypesService.GetTaskTypeByIdAsync(userId, projectId, typeId);
                 return HandleResponse(response);
             }
             catch

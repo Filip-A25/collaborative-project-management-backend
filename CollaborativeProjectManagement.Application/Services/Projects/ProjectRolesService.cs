@@ -4,7 +4,7 @@ using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 
-namespace CollaborativeProjectManagement.Application.Services
+namespace CollaborativeProjectManagement.Application.Services.Projects
 {
     public class ProjectRolesService : IProjectRolesService
     {
