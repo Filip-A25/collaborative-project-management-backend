@@ -43,12 +43,18 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, ResponseMessage.Tasks.CreateSuccess);
         }
 
-        public async Task<ServiceResponse> DeleteTaskAsync(Guid userId, DeleteTaskRequest request)
+        public async Task<ServiceResponse> DeleteTaskAsync(Guid userId, Guid projectId, Guid taskId)
         {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageTasks);
+            ProjectTask? targetTask = await _tasksRepository.GetTaskAsync(projectId, taskId);
+            if (targetTask == null)
+            {
+                return ServiceResponse.NotFound(ResponseMessage.Tasks.TaskNotFound);
+            }
+
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
             if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.Tasks.TasksManageError);
 
-            await _tasksRepository.DeleteTaskAsync(request.ProjectId, request.TaskId);
+            await _tasksRepository.DeleteTaskAsync(projectId, taskId);
             return ServiceResponse.NoContent(ResponseMessage.Tasks.DeleteSuccess);
         }
 

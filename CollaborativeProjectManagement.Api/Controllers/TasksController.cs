@@ -35,13 +35,13 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteTask(DeleteTaskRequest request)
+        [HttpDelete("{taskId}")]
+        public async Task<IActionResult> DeleteTask(Guid projectId, Guid taskId)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse response = await _tasksService.DeleteTaskAsync(userId, request);
+                ServiceResponse response = await _tasksService.DeleteTaskAsync(userId, projectId, taskId);
                 return HandleResponse(response);
             }
             catch
