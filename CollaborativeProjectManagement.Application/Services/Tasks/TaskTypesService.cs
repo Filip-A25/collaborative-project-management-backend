@@ -1,5 +1,4 @@
-﻿using System;
-using CollaborativeProjectManagement.Application.Common;
+﻿using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Tasks;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Tasks;

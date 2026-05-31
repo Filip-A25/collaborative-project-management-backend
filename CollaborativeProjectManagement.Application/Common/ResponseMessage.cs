@@ -92,6 +92,7 @@
             // Success messages
             public const string CreateSuccess = "Task has been successfully created.";
             public const string DeleteSuccess = "Task has been successfully deleted.";
+            public const string UpdateSuccess = "Task has been successfully updated.";
         }
 
         public static class TaskTypes

@@ -66,12 +66,27 @@ namespace CollaborativeProjectManagement.Api.Controllers
         }
 
         [HttpGet("{taskId}")]
-        public async Task<IActionResult> GetProjectById(Guid projectId, Guid taskId)
+        public async Task<IActionResult> GetTaskById(Guid projectId, Guid taskId)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse<ProjectTaskDTO?> response = await _tasksService.GetTaskByIdAsync(userId, projectId, taskId);
+                return HandleResponse(response);
+            }
+            catch
+            {
+                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+            }
+        }
+
+        [HttpPatch("{taskId}")]
+        public async Task<IActionResult> UpdateTask(Guid projectId, Guid taskId, UpdateTaskRequest request)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<ProjectTaskDTO?> response = await _tasksService.UpdateTaskAsync(userId, projectId, taskId, request);
                 return HandleResponse(response);
             }
             catch

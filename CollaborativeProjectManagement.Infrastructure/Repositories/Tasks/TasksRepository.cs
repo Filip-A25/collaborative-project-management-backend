@@ -34,9 +34,19 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).ToListAsync();
         }
 
-        public async Task<ProjectTask?> GetProjectByIdAsync(Guid projectId, Guid taskId)
+        public async Task<ProjectTask?> GetTaskWithUsersAsync(Guid projectId, Guid taskId)
         {
             return await _dbContext.ProjectTasks.Include(task => task.Creator).Include(task => task.AssignedUser).FirstOrDefaultAsync(task => task.Id == taskId);
+        }
+
+        public async Task<ProjectTask?> GetTaskAsync(Guid projectId, Guid taskId)
+        {
+            return await _dbContext.ProjectTasks.FirstOrDefaultAsync(task => task.Id == taskId);
+        }
+
+        public async Task UpdateTaskAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

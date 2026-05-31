@@ -72,7 +72,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ViewProject);
             if (!userHasSufficientPermissions) return ServiceResponse<ProjectTaskDTO?>.Forbidden(null, ResponseMessage.Tasks.ViewTasksError);
 
-            ProjectTask? task = await _tasksRepository.GetProjectByIdAsync(projectId, taskId);
+            ProjectTask? task = await _tasksRepository.GetTaskWithUsersAsync(projectId, taskId);
             if (task == null)
             {
                 return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.TaskNotFound);
@@ -80,6 +80,32 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
 
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(task);
             return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, null);
+        }
+
+        public async Task<ServiceResponse<ProjectTaskDTO?>> UpdateTaskAsync(Guid userId, Guid projectId, Guid taskId, UpdateTaskRequest request)
+        {
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
+            if (!userHasSufficientPermissions) return ServiceResponse<ProjectTaskDTO?>.Forbidden(null, ResponseMessage.Tasks.TasksManageError);
+
+            ProjectTask? targetTask = await _tasksRepository.GetTaskWithUsersAsync(projectId, taskId);
+            if (targetTask == null)
+            {
+                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.TaskNotFound);
+            }
+
+            targetTask.Title = request.Title ?? targetTask.Title;
+            targetTask.Description = request.Description ?? targetTask.Description;
+            targetTask.AssignedTo = request.AssignedTo ?? targetTask.AssignedTo;
+            targetTask.Priority = request.Priority ?? targetTask.Priority;
+            targetTask.Status = request.Status ?? targetTask.Status;
+            targetTask.TypeId = request.TypeId ?? targetTask.TypeId;
+            targetTask.StartDate = request.StartDate ?? targetTask.StartDate;
+            targetTask.DueDate = request.DueDate ?? targetTask.DueDate;
+
+            await _tasksRepository.UpdateTaskAsync();
+
+            ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(targetTask);
+            return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, ResponseMessage.Tasks.UpdateSuccess);
         }
     }
 }

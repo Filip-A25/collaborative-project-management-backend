@@ -7,6 +7,8 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Tasks
         Task<ProjectTask> CreateTaskAsync(ProjectTask task);
         Task DeleteTaskAsync(Guid projectId, Guid taskId);
         Task<List<ProjectTask>?> GetAllProjectTasks(Guid projectId);
-        Task<ProjectTask?> GetProjectByIdAsync(Guid projectId, Guid taskId);
+        Task<ProjectTask?> GetTaskWithUsersAsync(Guid projectId, Guid taskId);
+        Task<ProjectTask?> GetTaskAsync(Guid projectId, Guid taskId);
+        Task UpdateTaskAsync();
     }
 }
