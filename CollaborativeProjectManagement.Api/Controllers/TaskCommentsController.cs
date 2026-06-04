@@ -30,9 +30,9 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 ServiceResponse<CommentDTO?> response = await _taskCommentsService.CreateTaskCommentAsync(userId, projectId, taskId, request);
                 return HandleResponse(response);
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError, Exc = ex.ToString()});
+                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
             }
         }
 
