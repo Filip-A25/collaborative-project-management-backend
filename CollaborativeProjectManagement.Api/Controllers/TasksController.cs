@@ -21,12 +21,12 @@ namespace CollaborativeProjectManagement.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(CreateProjectTaskRequest request)
+        public async Task<IActionResult> CreateTask(Guid projectId, CreateProjectTaskRequest request)
         {
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse<ProjectTaskDTO?> response = await _tasksService.CreateTaskAsync(userId, request);
+                ServiceResponse<ProjectTaskDTO?> response = await _tasksService.CreateTaskAsync(projectId, userId, request);
                 return HandleResponse(response);
             }
             catch

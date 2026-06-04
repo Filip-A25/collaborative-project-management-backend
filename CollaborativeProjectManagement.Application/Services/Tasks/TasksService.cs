@@ -22,20 +22,26 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             _projectsRepository = projectsRepository;
         }
 
-        public async Task<ServiceResponse<ProjectTaskDTO?>> CreateTaskAsync(Guid userId, CreateProjectTaskRequest request)
+        public async Task<ServiceResponse<ProjectTaskDTO?>> CreateTaskAsync(Guid projectId, Guid userId, CreateProjectTaskRequest request)
         {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageTasks);
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
             if (!userHasSufficientPermissions) return ServiceResponse<ProjectTaskDTO?>.Forbidden(null, ResponseMessage.Tasks.TasksManageError);
 
-            List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembers(request.ProjectId);
-            bool projectHasAssignedMember = allProjectMembers != null ? allProjectMembers.Any(member => member.UserId == request.AssignedTo) : false;
+            ProjectMember? member = await _projectsRepository.GetProjectMemberAsync(projectId, userId);
+            if (member == null)
+            {
+                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotFoundA);
+            }
+
+            List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembers(projectId);
+            bool projectHasAssignedMember = allProjectMembers != null ? allProjectMembers.Any(member => member.Id == request.AssignedTo) : false;
 
             if (!projectHasAssignedMember)
             {
-                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotFound);
+                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotInProject);
             }
 
-            ProjectTask newTask = new ProjectTask(request.ProjectId, request.Title, request.Description, request.CreatorId, request.AssignedTo, request.Priority, request.Status, request.Type, request.StartDate, request.DueDate);
+            ProjectTask newTask = new ProjectTask(projectId, request.Title, request.Description, member.Id, request.AssignedTo, request.Priority, request.Status, request.Type, request.StartDate, request.DueDate);
             await _tasksRepository.CreateTaskAsync(newTask);
 
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(newTask);

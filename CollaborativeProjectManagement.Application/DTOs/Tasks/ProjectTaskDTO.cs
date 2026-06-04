@@ -1,4 +1,4 @@
-﻿using CollaborativeProjectManagement.Application.DTOs.Auth;
+﻿using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Tasks;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Tasks
@@ -8,8 +8,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
         public Guid Id { get; set; }
         public required string Title { get; set; }
         public string? Description { get; set; }
-        public required UserDTO Creator { get; set; }
-        public required UserDTO AssignedUser { get; set; }
+        public required ProjectMemberDTO Creator { get; set; }
+        public required ProjectMemberDTO AssignedUser { get; set; }
         public required TaskPriority Priority { get; set; }
         public required TaskStatus Status { get; set; }
         public TaskType? Type { get; set; }
@@ -23,8 +23,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
             Id = task.Id,
             Title = task.Title,
             Description = task.Description,
-            Creator = UserDTO.FromEntity(task.Creator),
-            AssignedUser = UserDTO.FromEntity(task.AssignedUser),
+            Creator = ProjectMemberDTO.FromEntity(task.Creator),
+            AssignedUser = ProjectMemberDTO.FromEntity(task.AssignedUser),
             Priority = task.Priority,
             Status = task.Status,
             Type = task.Type,

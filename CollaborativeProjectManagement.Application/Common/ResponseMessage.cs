@@ -83,7 +83,8 @@
             // Error messages
             public const string TasksManageError = "User does not have sufficient permissions to manage tasks.";
             public const string ProjectTasksNotFound = "No tasks were found for the project.";
-            public const string MemberNotFound = "Assigned user is not a member in this project.";
+            public const string MemberNotFoundA = "Member could not be found.";
+            public const string MemberNotInProject = "Assigned user is not a member in this project.";
             public const string TaskNotFound = "Task not found.";
 
             // Unauthorized tasks errros
@@ -104,6 +105,21 @@
             public const string CreateSuccess = "Task type has been successfully created.";
             public const string DeleteSuccess = "Task type has been successfully deleted.";
             public const string UpdateSuccess = "Task type has been successfully updated.";
+        }
+
+        public static class TaskComments
+        {
+            // Error messages
+            public const string NoPermission = "User does not have permission to edit this comment.";
+            public const string BatchNotFound = "No task comments found.";
+
+            // Unauthorized task comments errors
+            public const string TaskCommentsViewError = "User does not have sufficient permissions to view tasks in this project.";
+
+            // Success messages
+            public const string CreateSuccess = "Task comment has been successfully created.";
+            public const string DeleteSuccess = "Task comment has been successfully deleted.";
+            public const string UpdateSuccess = "Task comment has been successfully updated.";
         }
     }
 }

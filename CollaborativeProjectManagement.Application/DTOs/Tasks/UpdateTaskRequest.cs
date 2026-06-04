@@ -6,7 +6,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public Guid? AssignedTo { get; set; }
+        public int? AssignedTo { get; set; }
         public TaskPriority? Priority { get; set; }
         public TaskStatus? Status { get; set; }
         public int? TypeId { get; set; }

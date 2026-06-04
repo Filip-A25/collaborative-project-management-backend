@@ -76,5 +76,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         {
             return await _dbContext.ProjectMembers.Where(projectMember => projectMember.ProjectId == projectId).ToListAsync();
         }
+
+        public async Task<ProjectMember?> GetProjectMemberAsync(Guid projectId, Guid userId)
+        {
+            return await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).FirstOrDefaultAsync(member => member.UserId == userId);
+        }
     }
 }

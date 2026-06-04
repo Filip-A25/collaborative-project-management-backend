@@ -20,7 +20,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<TaskType> TaskTypes { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<TaskComment> TaskComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,8 +51,8 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             modelBuilder.Entity<ProjectTask>().HasOne(task => task.Creator).WithMany().HasForeignKey(task => task.CreatorId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<ProjectTask>().HasOne(task => task.AssignedUser).WithMany().HasForeignKey(task => task.AssignedTo).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<TaskType>().HasOne<Project>().WithMany().HasForeignKey(type => type.ProjectId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TaskComment>().HasOne(taskComment => taskComment.Task).WithMany().HasForeignKey(taskComment => taskComment.ProjectTaskId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TaskComment>().HasOne(taskComment => taskComment.Comment).WithMany().HasForeignKey(taskComment => taskComment.CommentId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>().HasOne(comment => comment.Commenter).WithMany().HasForeignKey(comment => comment.CommenterId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>().HasOne<ProjectTask>().WithMany().HasForeignKey(comment => comment.ProjectTaskId).OnDelete(DeleteBehavior.Restrict);
 
             // Table constraints
             modelBuilder.Entity<RolePermission>(builder =>

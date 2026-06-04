@@ -311,8 +311,8 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("CommenterId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CommenterId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -329,6 +329,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommenterId");
+
+                    b.HasIndex("ProjectTaskId");
+
                     b.ToTable("Comments");
                 });
 
@@ -338,14 +342,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AssignedTo")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("AssignedTo")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatorId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -385,29 +389,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.HasIndex("TypeId");
 
                     b.ToTable("ProjectTasks");
-                });
-
-            modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ProjectTaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("ProjectTaskId");
-
-                    b.ToTable("TaskComments");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskType", b =>
@@ -506,15 +487,31 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.Navigation("ProjectRole");
                 });
 
-            modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.ProjectTask", b =>
+            modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.Comment", b =>
                 {
-                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Auth.User", "AssignedUser")
+                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", "Commenter")
                         .WithMany()
-                        .HasForeignKey("AssignedTo")
+                        .HasForeignKey("CommenterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Auth.User", "Creator")
+                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Tasks.ProjectTask", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectTaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Commenter");
+                });
+
+            modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.ProjectTask", b =>
+                {
+                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedTo")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -529,25 +526,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskComment", b =>
-                {
-                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Tasks.Comment", "Comment")
-                        .WithMany()
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Tasks.ProjectTask", "Task")
-                        .WithMany()
-                        .HasForeignKey("ProjectTaskId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskType", b =>

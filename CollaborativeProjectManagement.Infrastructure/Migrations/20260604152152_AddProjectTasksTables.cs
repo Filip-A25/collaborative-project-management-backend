@@ -12,23 +12,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CommenterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TaskTypes",
                 columns: table => new
                 {
@@ -56,8 +39,8 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssignedTo = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    AssignedTo = table.Column<int>(type: "int", nullable: true),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: true),
@@ -70,49 +53,62 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ProjectTasks", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ProjectTasks_ProjectMembers_AssignedTo",
+                        column: x => x.AssignedTo,
+                        principalTable: "ProjectMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_ProjectMembers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "ProjectMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ProjectTasks_TaskTypes_TypeId",
                         column: x => x.TypeId,
                         principalTable: "TaskTypes",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProjectTasks_Users_AssignedTo",
-                        column: x => x.AssignedTo,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjectTasks_Users_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskComments",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CommenterId = table.Column<int>(type: "int", nullable: false),
                     ProjectTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CommentId = table.Column<int>(type: "int", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskComments", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskComments_Comments_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comments",
+                        name: "FK_Comments_ProjectMembers_CommenterId",
+                        column: x => x.CommenterId,
+                        principalTable: "ProjectMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TaskComments_ProjectTasks_ProjectTaskId",
+                        name: "FK_Comments_ProjectTasks_ProjectTaskId",
                         column: x => x.ProjectTaskId,
                         principalTable: "ProjectTasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_CommenterId",
+                table: "Comments",
+                column: "CommenterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ProjectTaskId",
+                table: "Comments",
+                column: "ProjectTaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTasks_AssignedTo",
@@ -130,16 +126,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskComments_CommentId",
-                table: "TaskComments",
-                column: "CommentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskComments_ProjectTaskId",
-                table: "TaskComments",
-                column: "ProjectTaskId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TaskTypes_ProjectId",
                 table: "TaskTypes",
                 column: "ProjectId");
@@ -148,9 +134,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "TaskComments");
-
             migrationBuilder.DropTable(
                 name: "Comments");
 
