@@ -6,7 +6,7 @@ using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 
-namespace CollaborativeProjectManagement.Application.Services
+namespace CollaborativeProjectManagement.Application.Services.Projects
 {
     public class ProjectsService : IProjectsService
     {
@@ -62,7 +62,7 @@ namespace CollaborativeProjectManagement.Application.Services
 
         public async Task<ServiceResponse> DeleteProjectAsync(Guid projectId, Guid userId)
         {
-            Project? project = await _projectsRepository.GetProjectAsync(projectId);
+            Project? project = await _projectsRepository.GetProjectWithMembersAsync(projectId);
 
             if (project == null)
             {
@@ -88,7 +88,7 @@ namespace CollaborativeProjectManagement.Application.Services
                 return ServiceResponse<ProjectDTO?>.Forbidden(null, ResponseMessage.Projects.ProjectRoleViewError);
             }
 
-            Project? project = await _projectsRepository.GetProjectAsync(projectId);
+            Project? project = await _projectsRepository.GetProjectWithMembersAsync(projectId);
 
             if (project == null)
             {

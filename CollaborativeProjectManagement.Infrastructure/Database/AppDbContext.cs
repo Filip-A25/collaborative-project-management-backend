@@ -2,6 +2,7 @@
 using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using Microsoft.EntityFrameworkCore;
+using CollaborativeProjectManagement.Domain.Entities.Tasks;
 
 namespace CollaborativeProjectManagement.Infrastructure.Database
 {
@@ -16,6 +17,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
         public DbSet<PermissionEntity> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ProjectInvite> ProjectInvites { get; set; }
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
+        public DbSet<TaskType> TaskTypes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +47,12 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             modelBuilder.Entity<ProjectInvite>().HasOne<User>().WithMany().HasForeignKey(invite => invite.InvitedUserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectInvite>().HasOne<ProjectRole>().WithMany().HasForeignKey(invite => invite.InvitedUserRoleId).OnDelete(DeleteBehavior.Restrict);
 
+            // Tasks relationships
+            modelBuilder.Entity<ProjectTask>().HasOne(task => task.Creator).WithMany().HasForeignKey(task => task.CreatorId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProjectTask>().HasOne(task => task.AssignedUser).WithMany().HasForeignKey(task => task.AssignedTo).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TaskType>().HasOne<Project>().WithMany().HasForeignKey(type => type.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Comment>().HasOne(comment => comment.Commenter).WithMany().HasForeignKey(comment => comment.CommenterId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>().HasOne<ProjectTask>().WithMany().HasForeignKey(comment => comment.ProjectTaskId).OnDelete(DeleteBehavior.Restrict);
 
             // Table constraints
             modelBuilder.Entity<RolePermission>(builder =>

@@ -2,6 +2,11 @@
 {
     public static class ResponseMessage
     {
+        public static class Common
+        {
+            public const string InternalError = "Unexpected error occured. Please try again.";
+        }
+
         public static class Auth
         {
             // Error messages
@@ -30,6 +35,7 @@
             // Unauthorized role errors
             public const string ProjectRoleDeleteError = "User does not have sufficient permissions to delete the project.";
             public const string ProjectRoleViewError = "User does not have sufficient permissions to view the project.";
+            public const string ProjectManageError = "User does not have sufficient permissions to manage this project.";
 
             // Success messages
             public const string DeleteSuccess = "Project has been successfully deleted.";
@@ -70,6 +76,50 @@
             public const string CreateSuccess = "User has been invited to a project.";
             public const string DeleteSuccess = "Invite has been successfully deleted.";
             public const string AcceptSuccess = "Invite has been successfully accepted.";
+        }
+
+        public static class Tasks
+        {
+            // Error messages
+            public const string TasksManageError = "User does not have sufficient permissions to manage tasks.";
+            public const string ProjectTasksNotFound = "No tasks were found for the project.";
+            public const string MemberNotFoundA = "Member could not be found.";
+            public const string MemberNotInProject = "Assigned user is not a member in this project.";
+            public const string TaskNotFound = "Task not found.";
+
+            // Unauthorized tasks errros
+            public const string ViewTasksError = "User does not have sufficient permissions to view tasks in this project.";
+
+            // Success messages
+            public const string CreateSuccess = "Task has been successfully created.";
+            public const string DeleteSuccess = "Task has been successfully deleted.";
+            public const string UpdateSuccess = "Task has been successfully updated.";
+        }
+
+        public static class TaskTypes
+        {
+            // Error messages
+            public const string TaskTypeNotFound = "Task type not found.";
+
+            // Success messages
+            public const string CreateSuccess = "Task type has been successfully created.";
+            public const string DeleteSuccess = "Task type has been successfully deleted.";
+            public const string UpdateSuccess = "Task type has been successfully updated.";
+        }
+
+        public static class TaskComments
+        {
+            // Error messages
+            public const string NoPermission = "User does not have permission to edit this comment.";
+            public const string BatchNotFound = "No task comments found.";
+
+            // Unauthorized task comments errors
+            public const string TaskCommentsViewError = "User does not have sufficient permissions to view tasks in this project.";
+
+            // Success messages
+            public const string CreateSuccess = "Task comment has been successfully created.";
+            public const string DeleteSuccess = "Task comment has been successfully deleted.";
+            public const string UpdateSuccess = "Task comment has been successfully updated.";
         }
     }
 }

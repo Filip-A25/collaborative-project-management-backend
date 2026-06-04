@@ -3,7 +3,7 @@ using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CollaborativeProjectManagement.Infrastructure.Repositories
+namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 {
     public class ProjectsRepository : IProjectsRepository
     {
@@ -41,7 +41,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Project?> GetProjectWithMembersAsync(Guid projectId)
+        public async Task<Project?> GetProjectWithFullMembersAsync(Guid projectId)
         {
             return await _dbContext.Projects
                 .Include(project => project.ProjectMembers)
@@ -52,9 +52,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
-        public async Task<Project?> GetProjectAsync(Guid projectId)
+        public async Task<Project?> GetProjectWithMembersAsync(Guid projectId)
         {
             return await _dbContext.Projects.Include(project => project.ProjectMembers).ThenInclude(member => member.User).FirstOrDefaultAsync(project => project.Id == projectId);
+        }
+
+        public async Task<Project?> GetProjectAsync(Guid projectId)
+        {
+            return await _dbContext.Projects.FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
         public async Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId)
@@ -65,6 +70,16 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories
         public async Task<List<Project>> GetAllProjectsForUserAsync(List<Guid> projectIds)
         {
             return await _dbContext.Projects.Where(project => projectIds.Contains(project.Id)).Include(project => project.ProjectMembers).ThenInclude(member => member.User).Include(project => project.ProjectMembers).ThenInclude(member => member.ProjectRole).ThenInclude(role => role.Permissions).ToListAsync();
+        }
+
+        public async Task<List<ProjectMember>?> GetAllProjectMembers(Guid projectId)
+        {
+            return await _dbContext.ProjectMembers.Where(projectMember => projectMember.ProjectId == projectId).ToListAsync();
+        }
+
+        public async Task<ProjectMember?> GetProjectMemberAsync(Guid projectId, Guid userId)
+        {
+            return await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).FirstOrDefaultAsync(member => member.UserId == userId);
         }
     }
 }

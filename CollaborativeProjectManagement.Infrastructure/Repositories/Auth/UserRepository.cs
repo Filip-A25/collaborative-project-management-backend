@@ -3,7 +3,7 @@ using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace CollaborativeProjectManagement.Infrastructure.Repositories
+namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
 {
     public class UserRepository : IUserRepository
     {

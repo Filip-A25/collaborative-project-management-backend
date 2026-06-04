@@ -1,16 +1,22 @@
 using System.Text;
 using CollaborativeProjectManagement.Application.Interfaces.Auth;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
-using CollaborativeProjectManagement.Application.Services;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 using CollaborativeProjectManagement.Infrastructure.Database;
-using CollaborativeProjectManagement.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CollaborativeProjectManagement.Application.Interfaces.Tasks;
+using CollaborativeProjectManagement.Domain.Interfaces.Tasks;
+using CollaborativeProjectManagement.Application.Services.Auth;
+using CollaborativeProjectManagement.Application.Services.Projects;
+using CollaborativeProjectManagement.Application.Services.Tasks;
+using CollaborativeProjectManagement.Infrastructure.Repositories.Auth;
+using CollaborativeProjectManagement.Infrastructure.Repositories.Projects;
+using CollaborativeProjectManagement.Infrastructure.Repositories.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +63,12 @@ builder.Services.AddScoped<IProjectRolesService, ProjectRolesService>();
 builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();
 builder.Services.AddScoped<IProjectInvitesService, ProjectInvitesService>();
 builder.Services.AddScoped<IProjectInvitesRepository, ProjectInvitesRepository>();
+builder.Services.AddScoped<ITasksService, TasksService>();
+builder.Services.AddScoped<ITasksRepository, TasksRepository>();
+builder.Services.AddScoped<ITaskTypesService, TaskTypesService>();
+builder.Services.AddScoped<ITaskTypesRepository, TaskTypesRepository>();
+builder.Services.AddScoped<ITaskCommentsRepository, TaskCommentsRepository>();
+builder.Services.AddScoped<ITaskCommentsService, TaskCommentsService>();
 
 var app = builder.Build();
 

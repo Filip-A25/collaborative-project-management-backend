@@ -18,8 +18,8 @@
 
     <ItemGroup>
 	    <ProjectReference Include="..\CollaborativeProjectManagement.Application\CollaborativeProjectManagement.Application.csproj" />
-		<ProjectReference Include="..\CollaborativeProjectManagement.Infrastructure\CollaborativeProjectManagement.Infrastructure.csproj" />
-		<ProjectReference Include="..\CollaborativeProjectManagement.Domain\CollaborativeProjectManagement.Domain.csproj" />
+		  <ProjectReference Include="..\CollaborativeProjectManagement.Infrastructure\CollaborativeProjectManagement.Infrastructure.csproj" />
+		  <ProjectReference Include="..\CollaborativeProjectManagement.Domain\CollaborativeProjectManagement.Domain.csproj" />
     </ItemGroup>
 	
 </Project>
