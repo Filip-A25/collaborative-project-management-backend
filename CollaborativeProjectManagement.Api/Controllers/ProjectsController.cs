@@ -81,7 +81,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
         }
 
         [HttpDelete("{projectId}/members/{memberId}")]
-        public async Task<IActionResult> RemoveMemberFromProjectAsync(Guid projectId, int memberId)
+        public async Task<IActionResult> RemoveMemberFromProject(Guid projectId, int memberId)
         {
             try
             {
