@@ -5,6 +5,7 @@ using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
+using static CollaborativeProjectManagement.Application.Common.ResponseMessage;
 
 namespace CollaborativeProjectManagement.Application.Services.Projects
 {
@@ -27,7 +28,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
         public async Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request)
         {
-            UserRole userRole = await _userRepository.GetUserRoleId(userId);
+            UserRole userRole = await _userRepository.GetUserRoleIdAsync(userId);
 
             if (userRole != UserRole.Admin)
             {
@@ -111,6 +112,29 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             List<ProjectDTO> projectDtos = projects.Select(ProjectDTO.FromEntity).ToList();
 
             return ServiceResponse<List<ProjectDTO>?>.Ok(projectDtos, null);
+        }
+
+        public async Task<ServiceResponse> RemoveMemberFromProjectAsync(Guid userId, Guid projectId, int memberId)
+        {
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.RemoveMembers);
+            if (!userHasSufficientPermissions)
+            {
+                return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectMembersRemoveError);
+            }
+
+            ProjectMember? targetMember = await _projectsRepository.GetProjectMemberByIdAsync(projectId, memberId);
+            if (targetMember == null)
+            {
+                ServiceResponse.NotFound(ResponseMessage.Projects.MemberNotFound);
+            }
+
+            if (targetMember.ProjectRole.Name == "Creator")
+            {
+                ServiceResponse.Forbidden(ResponseMessage.Projects.CreatorRemoveFail);
+            }
+
+            await _projectsRepository.RemoveMemberFromProjectAsync(projectId, memberId);
+            return ServiceResponse.NoContent(ResponseMessage.Projects.MemberRemoveSuccess);
         }
 
         private async Task AssignCreatorRoleToUser(Guid projectId, Guid userId)

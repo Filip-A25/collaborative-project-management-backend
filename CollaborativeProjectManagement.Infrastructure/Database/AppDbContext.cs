@@ -48,11 +48,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             modelBuilder.Entity<ProjectInvite>().HasOne<ProjectRole>().WithMany().HasForeignKey(invite => invite.InvitedUserRoleId).OnDelete(DeleteBehavior.Restrict);
 
             // Tasks relationships
-            modelBuilder.Entity<ProjectTask>().HasOne(task => task.Creator).WithMany().HasForeignKey(task => task.CreatorId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ProjectTask>().HasOne(task => task.AssignedUser).WithMany().HasForeignKey(task => task.AssignedTo).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProjectTask>().HasOne(task => task.Creator).WithMany().HasForeignKey(task => task.CreatorId).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<ProjectTask>().HasOne(task => task.AssignedUser).WithMany().HasForeignKey(task => task.AssignedTo).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<TaskType>().HasOne<Project>().WithMany().HasForeignKey(type => type.ProjectId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Comment>().HasOne(comment => comment.Commenter).WithMany().HasForeignKey(comment => comment.CommenterId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Comment>().HasOne<ProjectTask>().WithMany().HasForeignKey(comment => comment.ProjectTaskId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>().HasOne(comment => comment.Commenter).WithMany().HasForeignKey(comment => comment.CommenterId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Comment>().HasOne<ProjectTask>().WithMany().HasForeignKey(comment => comment.ProjectTaskId).OnDelete(DeleteBehavior.Cascade);
 
             // Table constraints
             modelBuilder.Entity<RolePermission>(builder =>

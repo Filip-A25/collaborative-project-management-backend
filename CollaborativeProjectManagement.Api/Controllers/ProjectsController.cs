@@ -31,7 +31,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { message = ResponseMessage.Projects.InternalCreateError });
+                return HandleInternalError();
             }
         }
 
@@ -46,7 +46,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalDeleteError });
+                return HandleInternalError();
             }
         }
 
@@ -61,7 +61,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalFetchError });
+                return HandleInternalError();
             }
         }
 
@@ -76,7 +76,23 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Projects.InternalBatchFetchError });
+                return HandleInternalError();
+            }
+        }
+
+        [HttpDelete("{projectId}/members/{memberId}")]
+        public async Task<IActionResult> RemoveMemberFromProjectAsync(Guid projectId, int memberId)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse response = await _projectsService.RemoveMemberFromProjectAsync(userId, projectId, memberId);
+                return HandleResponse(response);
+            }
+            catch (Exception ex)
+            {
+                var exc = ex;
+                return HandleInternalError();
             }
         }
     }

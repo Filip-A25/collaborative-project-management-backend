@@ -30,7 +30,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             ProjectMember? member = await _projectsRepository.GetProjectMemberAsync(projectId, userId);
             if (member == null)
             {
-                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotFoundA);
+                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Projects.MemberNotFound);
             }
 
             List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembers(projectId);
@@ -69,7 +69,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ViewProject);
             if (!userHasSufficientPermissions) return ServiceResponse<List<ProjectTaskDTO>?>.Forbidden(null, ResponseMessage.Tasks.ViewTasksError);
 
-            List<ProjectTask>? allTasks = await _tasksRepository.GetAllProjectTasks(projectId);
+            List<ProjectTask>? allTasks = await _tasksRepository.GetAllProjectTasksAsync(projectId);
             if (allTasks == null || !allTasks.Any())
             {
                 return ServiceResponse<List<ProjectTaskDTO>?>.NotFound(null, ResponseMessage.Tasks.ProjectTasksNotFound);

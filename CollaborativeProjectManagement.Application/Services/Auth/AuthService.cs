@@ -50,7 +50,7 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
 
             string? authToken = GenerateJWTToken(user);
 
-            if (authToken == null) return ServiceResponse.InternalServerError(ResponseMessage.Auth.InternalRegisterError);
+            if (authToken == null) return ServiceResponse.InternalServerError(ResponseMessage.Common.InternalError);
 
             return ServiceResponse.Ok(ResponseMessage.Auth.RegisterSuccess);
         }

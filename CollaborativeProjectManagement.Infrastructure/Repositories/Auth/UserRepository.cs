@@ -28,7 +28,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
             return user != null;
         }
 
-        public async Task<User?> GetUserById(Guid userId)
+        public async Task<User?> GetUserByIdAsync(Guid userId)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(user => user.Id ==userId);
         }
@@ -43,12 +43,12 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
             return await _dbContext.Users.Where(u => u.Username == username).FirstOrDefaultAsync();
         }
 
-        public async Task<UserRole> GetUserRoleId(Guid userId)
+        public async Task<UserRole> GetUserRoleIdAsync(Guid userId)
         {
             return await _dbContext.Users.Where(u => u.Id == userId).Select(u => u.Role).FirstOrDefaultAsync();
         }
 
-        public async Task<List<User>> GetUsersListByEmail(List<string> userEmails)
+        public async Task<List<User>> GetUsersListByEmailAsync(List<string> userEmails)
         {
             return await _dbContext.Users.Where(user => userEmails.Contains(user.Email)).ToListAsync();
         }

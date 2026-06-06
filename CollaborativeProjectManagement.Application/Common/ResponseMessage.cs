@@ -10,8 +10,6 @@
         public static class Auth
         {
             // Error messages
-            public const string InternalRegisterError = "Something went wrong while trying to register.";
-            public const string InternalLoginError = "Something went wrong while trying to login.";
             public const string RegisterConflict = "An account with this email already exists.";
             public const string UserNotFound = "User could not be found.";
             public const string IncorrectPassword = "Incorrect password entered.";
@@ -24,29 +22,27 @@
         public static class Projects
         {
             // Error messages
-            public const string InternalCreateError = "Something went wrong while creating a project.";
-            public const string InternalDeleteError = "Something went wrong while trying to delete the project.";
-            public const string InternalFetchError = "Something went wrong while trying to fetch the project.";
-            public const string InternalBatchFetchError = "Something went wrong while trying to fetch the projects.";
             public const string AuthorizationError = "User has to be an Admin to create a project.";
             public const string ProjectNotFound = "Project could not be found.";
             public const string ProjectsDontExist = "User does not have any projects.";
+            public const string UserNotMember = "User is not a member of this project.";
+            public const string MemberNotFound = "Member could not be found.";
+            public const string CreatorRemoveFail = "Creator cannot be removed from the project.";
 
             // Unauthorized role errors
             public const string ProjectRoleDeleteError = "User does not have sufficient permissions to delete the project.";
             public const string ProjectRoleViewError = "User does not have sufficient permissions to view the project.";
             public const string ProjectManageError = "User does not have sufficient permissions to manage this project.";
+            public const string ProjectMembersRemoveError = "User does not have sufficient permissions to remove members from this project.";
 
             // Success messages
             public const string DeleteSuccess = "Project has been successfully deleted.";
+            public const string MemberRemoveSuccess = "Member has been successfully removed from the project.";
         }
 
         public static class ProjectRoles
         {
             // Error messages
-            public const string InternalCreateError = "Something went wrong while trying to create a project role.";
-            public const string InternalDeleteError = "Something went wrong while trying to delete a project role.";
-            public const string InternalCreatePermissionsError = "Something went wrong while trying to add permissions to a project role.";
             public const string RoleNotFound = "Role could not be found.";
 
             // Unauthorized role errors
@@ -60,12 +56,8 @@
         public static class ProjectInvites
         {
             // Error messages
-            public const string InternalCreateError = "Something went wrong while trying to invite members to a project.";
             public const string UsersNotFound = "Users could not be found.";
-            public const string InternalUpdateError = "Something went wrong while trying to update invite accepted state.";
-            public const string InternalDeleteError = "Something went wrong while trying to delete a project invite.";
             public const string Expired = "Unable to update the invite. Invite has expired.";
-            public const string InternalFetchError = "Something went wrong while trying to fetch the invites.";
 
             // Unauthorized invites errors
             public const string InvitesCreateError = "User does not have sufficient permissions to create invites.";
@@ -75,7 +67,7 @@
             // Success messages
             public const string CreateSuccess = "User has been invited to a project.";
             public const string DeleteSuccess = "Invite has been successfully deleted.";
-            public const string AcceptSuccess = "Invite has been successfully accepted.";
+            public const string AcceptSuccess = "Invite has been successfully accepted. You are now a member of the project.";
         }
 
         public static class Tasks
@@ -83,7 +75,6 @@
             // Error messages
             public const string TasksManageError = "User does not have sufficient permissions to manage tasks.";
             public const string ProjectTasksNotFound = "No tasks were found for the project.";
-            public const string MemberNotFoundA = "Member could not be found.";
             public const string MemberNotInProject = "Assigned user is not a member in this project.";
             public const string TaskNotFound = "Task not found.";
 

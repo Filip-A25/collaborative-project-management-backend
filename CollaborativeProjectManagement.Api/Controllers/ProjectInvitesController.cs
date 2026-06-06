@@ -32,7 +32,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.ProjectInvites.InternalCreateError });
+                return HandleInternalError();
             }
         }
 
@@ -47,7 +47,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.ProjectInvites.InternalDeleteError });
+                return HandleInternalError();
             }
         }
 
@@ -62,7 +62,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.ProjectInvites.InternalUpdateError });
+                return HandleInternalError();
             }
         }
 
@@ -77,7 +77,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.ProjectInvites.InternalFetchError });
+                return HandleInternalError();
             }
         }
 
@@ -92,7 +92,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.ProjectInvites.InternalFetchError });
+                return HandleInternalError();
             }
         }
     }

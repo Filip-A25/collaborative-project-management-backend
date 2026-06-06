@@ -1,4 +1,4 @@
-﻿    using CollaborativeProjectManagement.Domain.Entities.Projects;
+﻿using CollaborativeProjectManagement.Domain.Entities.Projects;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {

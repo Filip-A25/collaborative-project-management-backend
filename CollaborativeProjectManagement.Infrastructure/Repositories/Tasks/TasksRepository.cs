@@ -29,7 +29,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).Where(task => task.Id == taskId).ExecuteDeleteAsync();
         }
 
-        public async Task<List<ProjectTask>?> GetAllProjectTasks(Guid projectId)
+        public async Task<List<ProjectTask>?> GetAllProjectTasksAsync(Guid projectId)
         {
             return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).ToListAsync();
         }

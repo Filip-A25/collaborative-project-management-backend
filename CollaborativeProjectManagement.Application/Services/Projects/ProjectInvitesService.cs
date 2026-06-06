@@ -28,7 +28,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageRoles);
             if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectInvites.InvitesCreateError);
 
-            User? invitedUser = await _userRepository.GetUserById(userId);
+            User? invitedUser = await _userRepository.GetUserByIdAsync(userId);
 
             if (invitedUser == null)
             {
@@ -57,7 +57,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             ProjectInvite? invite = await _projectInvitesRepository.GetProjectInviteAsync(projectId, inviteId);
             if (invite?.InvitedUserId != userId)
             {
-                return ServiceResponse.InternalServerError(ResponseMessage.ProjectInvites.InternalUpdateError);
+                return ServiceResponse.InternalServerError(ResponseMessage.Common.InternalError);
             }
 
             bool hasInviteExpired = DateTime.UtcNow > invite.ExpiresAt;
@@ -66,7 +66,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse.Gone(ResponseMessage.ProjectInvites.Expired);
             }
 
-            User? invitedUser = await _userRepository.GetUserById(invite.InvitedUserId);
+            User? invitedUser = await _userRepository.GetUserByIdAsync(invite.InvitedUserId);
             if (invitedUser == null)
             {
                 return ServiceResponse.NotFound(ResponseMessage.Auth.UserNotFound);

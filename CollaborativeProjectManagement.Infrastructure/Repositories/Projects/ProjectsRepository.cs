@@ -81,5 +81,15 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         {
             return await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).FirstOrDefaultAsync(member => member.UserId == userId);
         }
+
+        public async Task<ProjectMember?> GetProjectMemberByIdAsync(Guid projectId, int memberId)
+        {
+            return await _dbContext.ProjectMembers.Include(member => member.ProjectRole).FirstOrDefaultAsync(member => member.Id == memberId);
+        }
+
+        public async Task RemoveMemberFromProjectAsync(Guid projectId, int memberId)
+        {
+            await _dbContext.ProjectMembers.Where(member => member.Id == memberId).ExecuteDeleteAsync();
+        }
     }
 }
