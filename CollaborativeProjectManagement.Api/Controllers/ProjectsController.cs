@@ -89,9 +89,8 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 ServiceResponse response = await _projectsService.RemoveMemberFromProjectAsync(userId, projectId, memberId);
                 return HandleResponse(response);
             }
-            catch (Exception ex)
+            catch
             {
-                var exc = ex;
                 return HandleInternalError();
             }
         }
