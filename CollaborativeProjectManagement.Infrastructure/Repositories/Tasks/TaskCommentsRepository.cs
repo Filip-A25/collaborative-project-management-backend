@@ -19,18 +19,27 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             _dbContext.Comments.Add(comment);
             await _dbContext.SaveChangesAsync();
 
-            Comment? newComment = await _dbContext.Comments.Include(selectedComment => selectedComment.Commenter).FirstOrDefaultAsync(selectedComment => selectedComment.Id == comment.Id);
+            Comment? newComment = await _dbContext.Comments
+                .Include(selectedComment => selectedComment.Commenter)
+                .FirstOrDefaultAsync(selectedComment => selectedComment.Id == comment.Id);
+
             return comment;
         }
 
         public async Task DeleteTaskCommentAsync(Guid taskId, int commentId)
         {
-            await _dbContext.Comments.Where(comment => comment.ProjectTaskId == taskId).Where(comment => comment.Id == commentId).ExecuteDeleteAsync();
+            await _dbContext.Comments
+                .Where(comment => comment.ProjectTaskId == taskId)
+                .Where(comment => comment.Id == commentId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<Comment?> GetTaskCommentWithCommenterAsync(Guid taskId, int commentId)
         {
-            return await _dbContext.Comments.Where(comment => comment.ProjectTaskId == taskId).Include(comment => comment.Commenter).FirstOrDefaultAsync(comment => comment.Id == commentId);
+            return await _dbContext.Comments
+                .Where(comment => comment.ProjectTaskId == taskId)
+                .Include(comment => comment.Commenter)
+                .FirstOrDefaultAsync(comment => comment.Id == commentId);
         }
 
         public async Task UpdateTaskCommentAsync()
@@ -40,7 +49,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
         public async Task<List<Comment>?> GetAllTaskCommentsAsync(Guid taskId)
         {
-            return await _dbContext.Comments.Where(comment => comment.ProjectTaskId == taskId).Include(comment => comment.Commenter).ToListAsync();
+            return await _dbContext.Comments
+                .Where(comment => comment.ProjectTaskId == taskId)
+                .Include(comment => comment.Commenter)
+                .ToListAsync();
         }
     }
 }

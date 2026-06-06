@@ -19,24 +19,35 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             _dbContext.ProjectTasks.Add(task);
             await _dbContext.SaveChangesAsync();
 
-            ProjectTask? createdTask = await _dbContext.ProjectTasks.Include(task => task.Creator).Include(task => task.AssignedUser).FirstOrDefaultAsync(createdTask => createdTask.Id == task.Id);
+            ProjectTask? createdTask = await _dbContext.ProjectTasks
+                .Include(task => task.Creator)
+                .Include(task => task.AssignedUser)
+                .FirstOrDefaultAsync(createdTask => createdTask.Id == task.Id);
 
             return createdTask ?? task;
         }
 
         public async Task DeleteTaskAsync(Guid projectId, Guid taskId)
         {
-            await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).Where(task => task.Id == taskId).ExecuteDeleteAsync();
+            await _dbContext.ProjectTasks
+                .Where(task => task.ProjectId == projectId)
+                .Where(task => task.Id == taskId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<List<ProjectTask>> GetAllProjectTasksAsync(Guid projectId)
         {
-            return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).ToListAsync();
+            return await _dbContext.ProjectTasks
+                .Where(task => task.ProjectId == projectId)
+                .ToListAsync();
         }
 
         public async Task<ProjectTask?> GetTaskWithUsersAsync(Guid projectId, Guid taskId)
         {
-            return await _dbContext.ProjectTasks.Include(task => task.Creator).Include(task => task.AssignedUser).FirstOrDefaultAsync(task => task.Id == taskId);
+            return await _dbContext.ProjectTasks
+                .Include(task => task.Creator)
+                .Include(task => task.AssignedUser)
+                .FirstOrDefaultAsync(task => task.Id == taskId);
         }
 
         public async Task<ProjectTask?> GetTaskAsync(Guid projectId, Guid taskId)
@@ -51,7 +62,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
         public async Task<List<ProjectTask>> GetAllTasksFromMemberAsync(Guid projectId, int memberId)
         {
-            return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).Where(task => task.CreatorId == memberId).ToListAsync();
+            return await _dbContext.ProjectTasks
+                .Where(task => task.ProjectId == projectId)
+                .Where(task => task.CreatorId == memberId)
+                .ToListAsync();
         }
 
         public async Task DeleteAllProjectTasksAsync(Guid projectId)

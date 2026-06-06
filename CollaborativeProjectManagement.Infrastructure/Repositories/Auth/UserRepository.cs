@@ -24,7 +24,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
 
         public async Task<bool> CheckIfEmailExistsAsync(string email)
         {
-            User? user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            User? user = await _dbContext.Users
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
             return user != null;
         }
 
@@ -35,22 +37,31 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            return await _dbContext.Users
+                .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
-            return await _dbContext.Users.Where(u => u.Username == username).FirstOrDefaultAsync();
+            return await _dbContext.Users
+                .Where(u => u.Username == username)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<UserRole> GetUserRoleIdAsync(Guid userId)
         {
-            return await _dbContext.Users.Where(u => u.Id == userId).Select(u => u.Role).FirstOrDefaultAsync();
+            return await _dbContext.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.Role)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<User>> GetUsersListByEmailAsync(List<string> userEmails)
         {
-            return await _dbContext.Users.Where(user => userEmails.Contains(user.Email)).ToListAsync();
+            return await _dbContext.Users
+                .Where(user => userEmails.Contains(user.Email))
+                .ToListAsync();
         }
     }
 }

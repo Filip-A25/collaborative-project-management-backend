@@ -38,7 +38,13 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 
         public async Task<List<PermissionEntity>?> GetProjectMemberRolePermissionsAsync(Guid projectId, Guid userId)
         {
-            ProjectRole? memberRole = await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).Where(member => member.UserId == userId).Include(member => member.ProjectRole).ThenInclude(role => role.Permissions).Select(projectMember => projectMember.ProjectRole).FirstOrDefaultAsync();
+            ProjectRole? memberRole = await _dbContext.ProjectMembers
+                .Where(member => member.ProjectId == projectId)
+                .Where(member => member.UserId == userId)
+                .Include(member => member.ProjectRole)
+                .ThenInclude(role => role.Permissions)
+                .Select(projectMember => projectMember.ProjectRole)
+                .FirstOrDefaultAsync();
 
                 if (memberRole == null || memberRole.Permissions == null || !memberRole.Permissions.Any()) return null;
             return memberRole.Permissions.ToList();
@@ -46,17 +52,25 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 
         public async Task DeleteProjectRolesAsync(List<int> projectRoleIds, Guid projectId)
         {
-            await _dbContext.ProjectRoles.Where(role => projectRoleIds.Contains(role.Id)).ExecuteDeleteAsync();
+            await _dbContext.ProjectRoles
+                .Where(role => projectRoleIds.Contains(role.Id))
+                .ExecuteDeleteAsync();
         }
 
         public async Task<ProjectRole?> GetProjectRoleAsync(Guid projectId, int projectRoleId)
         {
-            return await _dbContext.ProjectRoles.Where(role => projectId == role.ProjectId).FirstOrDefaultAsync(role => role.Id == projectRoleId);
+            return await _dbContext.ProjectRoles
+                .Where(role => projectId == role.ProjectId)
+                .FirstOrDefaultAsync(role => role.Id == projectRoleId);
         }
 
         public async Task<ProjectRole?> GetProjectRoleWithPermissionsAsync(Guid projectId, int projectRoleId)
         {
-            return await _dbContext.ProjectRoles.Where(role => role.ProjectId == projectId).Where(role => role.Id == projectRoleId).Include(role => role.Permissions).FirstOrDefaultAsync();
+            return await _dbContext.ProjectRoles
+                .Where(role => role.ProjectId == projectId)
+                .Where(role => role.Id == projectRoleId)
+                .Include(role => role.Permissions)
+                .FirstOrDefaultAsync();
         }
     }
 }
