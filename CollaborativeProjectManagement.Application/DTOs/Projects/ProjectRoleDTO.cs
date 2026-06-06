@@ -6,12 +6,14 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
     {
         public required string Name { get; set; }
         public required string Color { get; set; }
+        public bool IsCreatorRole { get; set; }
         public ICollection<PermissionEntity>? Permissions { get; set; }
 
         public static ProjectRoleDTO FromEntity(ProjectRole role) => new()
         {
             Name = role.Name,
             Color = role.Color,
+            IsCreatorRole = role.IsCreatorRole,
             Permissions = role.Permissions
         };
     }

@@ -29,7 +29,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).Where(task => task.Id == taskId).ExecuteDeleteAsync();
         }
 
-        public async Task<List<ProjectTask>?> GetAllProjectTasksAsync(Guid projectId)
+        public async Task<List<ProjectTask>> GetAllProjectTasksAsync(Guid projectId)
         {
             return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).ToListAsync();
         }
@@ -46,6 +46,19 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
         public async Task UpdateTaskAsync()
         {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ProjectTask>> GetAllTasksFromMemberAsync(Guid projectId, int memberId)
+        {
+            return await _dbContext.ProjectTasks.Where(task => task.ProjectId == projectId).Where(task => task.CreatorId == memberId).ToListAsync();
+        }
+
+        public async Task DeleteAllProjectTasksAsync(Guid projectId)
+        {
+            List<ProjectTask> allTasks = await GetAllProjectTasksAsync(projectId);
+
+            _dbContext.ProjectTasks.RemoveRange(allTasks);
             await _dbContext.SaveChangesAsync();
         }
     }

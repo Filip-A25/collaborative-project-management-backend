@@ -40,7 +40,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         {
             ProjectRole? memberRole = await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).Where(member => member.UserId == userId).Include(member => member.ProjectRole).ThenInclude(role => role.Permissions).Select(projectMember => projectMember.ProjectRole).FirstOrDefaultAsync();
 
-            if (memberRole == null || memberRole.Permissions == null || !memberRole.Permissions.Any()) return null;
+                if (memberRole == null || memberRole.Permissions == null || !memberRole.Permissions.Any()) return null;
             return memberRole.Permissions.ToList();
         }
 

@@ -119,5 +119,21 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(targetTask);
             return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, ResponseMessage.Tasks.UpdateSuccess);
         }
+
+        public async Task RemoveCreatorFromTasksAsync(Guid projectId, int memberId)
+        {
+            List<ProjectTask> memberTasks = await _tasksRepository.GetAllTasksFromMemberAsync(projectId, memberId);
+
+            foreach (ProjectTask task in memberTasks)
+            {
+                task.CreatorId = null;
+            }
+            await _tasksRepository.UpdateTaskAsync();
+        }
+
+        public async Task DeleteAllProjectTasksAsync(Guid projectId)
+        {
+            await _tasksRepository.DeleteAllProjectTasksAsync(projectId);
+        }
     }
 }

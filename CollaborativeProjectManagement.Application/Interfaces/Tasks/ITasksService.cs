@@ -1,6 +1,5 @@
 ﻿using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Tasks;
-using CollaborativeProjectManagement.Domain.Entities.Tasks;
 
 namespace CollaborativeProjectManagement.Application.Interfaces.Tasks
 {
@@ -11,5 +10,7 @@ namespace CollaborativeProjectManagement.Application.Interfaces.Tasks
         Task<ServiceResponse<List<ProjectTaskDTO>?>> GetAllProjectTasksAsync(Guid userId, Guid projectId);
         Task<ServiceResponse<ProjectTaskDTO?>> GetTaskByIdAsync(Guid userId, Guid projectId, Guid taskId);
         Task<ServiceResponse<ProjectTaskDTO?>> UpdateTaskAsync(Guid userId, Guid projectId, Guid taskId, UpdateTaskRequest request);
+        Task RemoveCreatorFromTasksAsync(Guid projectId, int memberId);
+        Task DeleteAllProjectTasksAsync(Guid projectId);
     }
 }
