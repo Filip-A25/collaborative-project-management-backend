@@ -29,7 +29,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = "Something went wrong while trying to register." });
+                return HandleInternalError();
             }
         }
 
@@ -44,7 +44,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = "Something went wrong while trying to login." });
+                return HandleInternalError();
             }
         }
     }

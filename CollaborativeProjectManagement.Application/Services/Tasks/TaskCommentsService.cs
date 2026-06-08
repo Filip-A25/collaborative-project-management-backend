@@ -27,20 +27,14 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
 
         public async Task<ServiceResponse<CommentDTO?>> CreateTaskCommentAsync(Guid userId, Guid projectId, Guid taskId, CreateTaskCommentRequest request)
         {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
-            if (!userHasSufficientPermissions) return ServiceResponse<CommentDTO?>.Forbidden(null, ResponseMessage.Tasks.TasksManageError);
-
             ProjectMember? member = await _projectsRepository.GetProjectMemberAsync(projectId, userId);
             if (member == null)
             {
-                return ServiceResponse<CommentDTO?>.NotFound(null, "");
+                return ServiceResponse<CommentDTO?>.NotFound(null, ResponseMessage.Projects.UserNotMember);
             }
 
-            int? memberId = await GetProjectMemberIdAsync(projectId, userId);
-            if (memberId == null)
-            {
-                return ServiceResponse<CommentDTO?>.NotFound(null, ResponseMessage.Tasks.TaskNotFound);
-            }
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
+            if (!userHasSufficientPermissions) return ServiceResponse<CommentDTO?>.Forbidden(null, ResponseMessage.Tasks.TasksManageError);
 
             Comment newComment = new Comment(member.Id, taskId, request.Text);
             Comment? createdComment = await _taskCommentsRepository.CreateTaskCommentAsync(newComment);

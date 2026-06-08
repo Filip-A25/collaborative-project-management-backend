@@ -23,5 +23,10 @@ namespace CollaborativeProjectManagement.Api.Controllers.Common
                 response.Message
             });
         }
+
+        protected IActionResult HandleInternalError()
+        {
+            return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+        }
     }
 }

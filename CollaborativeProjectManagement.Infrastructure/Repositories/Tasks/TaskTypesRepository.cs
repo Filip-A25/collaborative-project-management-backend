@@ -24,12 +24,17 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
         public async Task DeleteTaskTypeAsync(Guid projectId, int typeId)
         {
-            await _dbContext.TaskTypes.Where(type => type.ProjectId == projectId).Where(type => type.Id == typeId).ExecuteDeleteAsync();
+            await _dbContext.TaskTypes
+                .Where(type => type.ProjectId == projectId)
+                .Where(type => type.Id == typeId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<TaskType?> ChangeTaskTypeTitleAsync(Guid projectId, int typeId, string title)
         {
-            TaskType? type = await _dbContext.TaskTypes.Where(type => type.ProjectId == projectId).FirstOrDefaultAsync(type => type.Id == typeId);
+            TaskType? type = await _dbContext.TaskTypes
+                .Where(type => type.ProjectId == projectId)
+                .FirstOrDefaultAsync(type => type.Id == typeId);
 
             if (type == null) return null;
 
@@ -41,7 +46,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
         public async Task<TaskType?> GetTaskTypeByIdAsync(Guid projectId, int typeId)
         {
-            return await _dbContext.TaskTypes.Where(type => type.ProjectId == projectId).FirstOrDefaultAsync(type => type.Id == typeId);
+            return await _dbContext.TaskTypes
+                .Where(type => type.ProjectId == projectId)
+                .FirstOrDefaultAsync(type => type.Id == typeId);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreateError);
+                return HandleInternalError();
             }
         }
 
@@ -46,7 +46,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, ResponseMessage.ProjectRoles.InternalDeleteError);
+                return HandleInternalError();
             }
         }
 
@@ -61,7 +61,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, ResponseMessage.ProjectRoles.InternalCreatePermissionsError);
+                return HandleInternalError();
             }
         }
     }

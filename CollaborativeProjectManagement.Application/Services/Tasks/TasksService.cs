@@ -30,7 +30,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             ProjectMember? member = await _projectsRepository.GetProjectMemberAsync(projectId, userId);
             if (member == null)
             {
-                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotFoundA);
+                return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Projects.MemberNotFound);
             }
 
             List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembers(projectId);
@@ -69,7 +69,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ViewProject);
             if (!userHasSufficientPermissions) return ServiceResponse<List<ProjectTaskDTO>?>.Forbidden(null, ResponseMessage.Tasks.ViewTasksError);
 
-            List<ProjectTask>? allTasks = await _tasksRepository.GetAllProjectTasks(projectId);
+            List<ProjectTask>? allTasks = await _tasksRepository.GetAllProjectTasksAsync(projectId);
             if (allTasks == null || !allTasks.Any())
             {
                 return ServiceResponse<List<ProjectTaskDTO>?>.NotFound(null, ResponseMessage.Tasks.ProjectTasksNotFound);
@@ -118,6 +118,22 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
 
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(targetTask);
             return ServiceResponse<ProjectTaskDTO?>.Ok(taskDto, ResponseMessage.Tasks.UpdateSuccess);
+        }
+
+        public async Task RemoveCreatorFromTasksAsync(Guid projectId, int memberId)
+        {
+            List<ProjectTask> memberTasks = await _tasksRepository.GetAllTasksFromMemberAsync(projectId, memberId);
+
+            foreach (ProjectTask task in memberTasks)
+            {
+                task.CreatorId = null;
+            }
+            await _tasksRepository.UpdateTaskAsync();
+        }
+
+        public async Task DeleteAllProjectTasksAsync(Guid projectId)
+        {
+            await _tasksRepository.DeleteAllProjectTasksAsync(projectId);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+                return HandleInternalError();
             }
         }
 
@@ -46,7 +46,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+                return HandleInternalError();
             }
         }
 
@@ -61,7 +61,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+                return HandleInternalError();
             }
         }
 
@@ -76,7 +76,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+                return HandleInternalError();
             }
         }
 
@@ -91,7 +91,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             }
             catch
             {
-                return StatusCode(500, new { Message = ResponseMessage.Common.InternalError });
+                return HandleInternalError();
             }
         }
     }

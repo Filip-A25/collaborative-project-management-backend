@@ -10,14 +10,16 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
     {
         private readonly IProjectRolesRepository _projectRolesRepository;
         private readonly IProjectAuthorizationService _projectAuthorizationService;
+        private readonly IProjectsRepository _projectsRepository;
 
         private const string CreatorRoleName = "Creator";
         private const string CreatorRoleDefaultColorHex = "cf233a";
 
-        public ProjectRolesService(IProjectRolesRepository projectRolesRepository, IProjectAuthorizationService projectAuthorizationService)
+        public ProjectRolesService(IProjectRolesRepository projectRolesRepository, IProjectAuthorizationService projectAuthorizationService, IProjectsRepository projectsRepository)
         {
             _projectRolesRepository = projectRolesRepository;
             _projectAuthorizationService = projectAuthorizationService;
+            _projectsRepository = projectsRepository;
         }
 
         public async Task<ServiceResponse<ProjectRoleDTO?>> CreateProjectRoleAsync(Guid userId, CreateProjectRoleRequest request)
@@ -71,13 +73,14 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             return ServiceResponse.NoContent(ResponseMessage.ProjectRoles.DeleteBatchSuccess);
         }
 
-        public async Task<ProjectRole> AddCreatorRole(Guid projectId, Guid creatorId)
+        private async Task<ProjectRole> AddCreatorRole(Guid projectId, Guid creatorId)
         {
             ProjectRole creatorRole = new ProjectRole
             {
                 ProjectId = projectId,
                 Name = CreatorRoleName,
-                Color = CreatorRoleDefaultColorHex
+                Color = CreatorRoleDefaultColorHex,
+                IsCreatorRole = true
             };
 
             await _projectRolesRepository.CreateProjectRoleAsync(creatorRole);
@@ -93,7 +96,15 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             return creatorRole;
         }
 
-        private async Task AssignPermissionsToRole(int roleId, List<int> permissionIds)
+        public async Task AssignCreatorRoleToUser(Guid projectId, Guid userId)
+        {
+            ProjectRole creatorRole = await AddCreatorRole(projectId, userId);
+            ProjectMember newMember = new ProjectMember(userId, projectId, creatorRole.Id);
+
+            await _projectsRepository.AddMemberToProjectAsync(newMember);
+        }
+
+        public async Task AssignPermissionsToRole(int roleId, List<int> permissionIds)
         {
             List<RolePermission> rolePermissions = permissionIds.Select(permissionId => new RolePermission
             {

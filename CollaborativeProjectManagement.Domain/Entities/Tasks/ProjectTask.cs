@@ -12,8 +12,7 @@ namespace CollaborativeProjectManagement.Domain.Entities.Tasks
         [MaxLength(200)]
         public string Title { get; set; }
         public string? Description { get; set; }
-        [Required]
-        public int CreatorId { get; set; }
+        public int? CreatorId { get; set; }
         public int? AssignedTo { get; set; }
         [Required]
         public TaskPriority Priority { get; set; }

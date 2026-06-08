@@ -8,8 +8,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
         public Guid Id { get; set; }
         public required string Title { get; set; }
         public string? Description { get; set; }
-        public required ProjectMemberDTO Creator { get; set; }
-        public required ProjectMemberDTO AssignedUser { get; set; }
+        public ProjectMemberDTO? Creator { get; set; }
+        public ProjectMemberDTO? AssignedUser { get; set; }
         public required TaskPriority Priority { get; set; }
         public required TaskStatus Status { get; set; }
         public TaskType? Type { get; set; }

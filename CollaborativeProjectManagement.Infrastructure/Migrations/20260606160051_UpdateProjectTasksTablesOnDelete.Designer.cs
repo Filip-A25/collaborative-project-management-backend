@@ -4,6 +4,7 @@ using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollaborativeProjectManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260606160051_UpdateProjectTasksTablesOnDelete")]
+    partial class UpdateProjectTasksTablesOnDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.PermissionEntity", b =>
@@ -81,7 +84,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
@@ -164,7 +167,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectInvite", b =>
@@ -205,7 +208,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.HasIndex("ProjectId", "InvitedUserId")
                         .IsUnique();
 
-                    b.ToTable("ProjectInvites", (string)null);
+                    b.ToTable("ProjectInvites");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", b =>
@@ -243,7 +246,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.HasIndex("ProjectId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ProjectMembers", (string)null);
+                    b.ToTable("ProjectMembers");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectRole", b =>
@@ -261,9 +264,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsCreatorRole")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -279,7 +279,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectRoles", (string)null);
+                    b.ToTable("ProjectRoles");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.RolePermission", b =>
@@ -303,7 +303,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.HasIndex("ProjectRoleId", "PermissionId")
                         .IsUnique();
 
-                    b.ToTable("RolePermissions", (string)null);
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.Comment", b =>
@@ -336,7 +336,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("ProjectTaskId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.ProjectTask", b =>
@@ -351,7 +351,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CreatorId")
+                    b.Property<int>("CreatorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -391,7 +391,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("ProjectTasks", (string)null);
+                    b.ToTable("ProjectTasks");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskType", b =>
@@ -413,7 +413,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("TaskTypes", (string)null);
+                    b.ToTable("TaskTypes");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectInvite", b =>
@@ -517,7 +517,8 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                     b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("CollaborativeProjectManagement.Domain.Entities.Tasks.TaskType", "Type")
                         .WithMany()

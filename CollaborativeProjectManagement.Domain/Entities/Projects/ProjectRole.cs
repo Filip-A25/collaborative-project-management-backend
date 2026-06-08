@@ -11,6 +11,7 @@ namespace CollaborativeProjectManagement.Domain.Entities.Projects
         [MaxLength(60)]
         public required string Name { get; set; }
         public required string Color { get; set; }
+        public bool IsCreatorRole { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace CollaborativeProjectManagement.Application.DTOs.Tasks
+﻿namespace CollaborativeProjectManagement.Application.DTOs.Tasks
 {
     public class CreateTaskTypeRequest
     {

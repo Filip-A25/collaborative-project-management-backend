@@ -32,7 +32,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
 
         public async Task DeleteProjectAsync(Guid projectId)
         {
-            await _dbContext.Projects.Where(project => project.Id == projectId).ExecuteDeleteAsync();
+            await _dbContext.Projects
+                .Where(project => project.Id == projectId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task AddMemberToProjectAsync(ProjectMember member)
@@ -45,41 +47,73 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         {
             return await _dbContext.Projects
                 .Include(project => project.ProjectMembers)
-                    .ThenInclude(member => member.User)
+                .ThenInclude(member => member.User)
                 .Include(project => project.ProjectMembers)
-                    .ThenInclude(member => member.ProjectRole)
-                    .ThenInclude(role => role.Permissions)
+                .ThenInclude(member => member.ProjectRole)
+                .ThenInclude(role => role.Permissions)
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
         public async Task<Project?> GetProjectWithMembersAsync(Guid projectId)
         {
-            return await _dbContext.Projects.Include(project => project.ProjectMembers).ThenInclude(member => member.User).FirstOrDefaultAsync(project => project.Id == projectId);
+            return await _dbContext.Projects
+                .Include(project => project.ProjectMembers)
+                .ThenInclude(member => member.User)
+                .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
         public async Task<Project?> GetProjectAsync(Guid projectId)
         {
-            return await _dbContext.Projects.FirstOrDefaultAsync(project => project.Id == projectId);
+            return await _dbContext.Projects
+                .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
         public async Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId)
         {
-            return await _dbContext.ProjectMembers.Where(member => member.UserId == userId).Select(member => member.ProjectId).ToListAsync();
+            return await _dbContext.ProjectMembers
+                .Where(member => member.UserId == userId)
+                .Select(member => member.ProjectId)
+                .ToListAsync();
         }
 
         public async Task<List<Project>> GetAllProjectsForUserAsync(List<Guid> projectIds)
         {
-            return await _dbContext.Projects.Where(project => projectIds.Contains(project.Id)).Include(project => project.ProjectMembers).ThenInclude(member => member.User).Include(project => project.ProjectMembers).ThenInclude(member => member.ProjectRole).ThenInclude(role => role.Permissions).ToListAsync();
+            return await _dbContext.Projects
+                .Where(project => projectIds.Contains(project.Id))
+                .Include(project => project.ProjectMembers)
+                .ThenInclude(member => member.User)
+                .Include(project => project.ProjectMembers)
+                .ThenInclude(member => member.ProjectRole)
+                .ThenInclude(role => role.Permissions)
+                .ToListAsync();
         }
 
         public async Task<List<ProjectMember>?> GetAllProjectMembers(Guid projectId)
         {
-            return await _dbContext.ProjectMembers.Where(projectMember => projectMember.ProjectId == projectId).ToListAsync();
+            return await _dbContext.ProjectMembers
+                .Where(projectMember => projectMember.ProjectId == projectId)
+                .ToListAsync();
         }
 
         public async Task<ProjectMember?> GetProjectMemberAsync(Guid projectId, Guid userId)
         {
-            return await _dbContext.ProjectMembers.Where(member => member.ProjectId == projectId).FirstOrDefaultAsync(member => member.UserId == userId);
+            return await _dbContext.ProjectMembers
+                .Where(member => member.ProjectId == projectId)
+                .FirstOrDefaultAsync(member => member.UserId == userId);
+        }
+
+        public async Task<ProjectMember?> GetProjectMemberByIdAsync(Guid projectId, int memberId)
+        {
+            return await _dbContext.ProjectMembers
+                .Include(member => member.ProjectRole)
+                .FirstOrDefaultAsync(member => member.Id == memberId);
+        }
+
+        public async Task RemoveMemberFromProjectAsync(Guid projectId, int memberId)
+        {
+            await _dbContext.ProjectMembers
+                .Where(member => member.Id == memberId)
+                .ExecuteDeleteAsync();
         }
     }
 }

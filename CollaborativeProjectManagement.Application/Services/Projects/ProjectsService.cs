@@ -1,6 +1,7 @@
 ﻿using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
+using CollaborativeProjectManagement.Application.Interfaces.Tasks;
 using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Interfaces.Auth;
@@ -13,21 +14,23 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
         private readonly IProjectsRepository _projectsRepository;
         private readonly IUserRepository _userRepository;
         private readonly IProjectAuthorizationService _projectAuthorizationService;
-        private readonly IProjectRolesRepository _projectRolesRepository;
+        private readonly IProjectRolesRepository _projectRolesRepository;   
         private readonly IProjectRolesService _projectRolesService;
+        private readonly ITasksService _tasksService;
 
-        public ProjectsService(IProjectsRepository projectsRepository, IUserRepository userRepository, IProjectAuthorizationService projectAuthorizationService, IProjectRolesRepository projectRolesRepository, IProjectRolesService projectRolesService)
+        public ProjectsService(IProjectsRepository projectsRepository, IUserRepository userRepository, IProjectAuthorizationService projectAuthorizationService, IProjectRolesRepository projectRolesRepository, IProjectRolesService projectRolesService, ITasksService tasksService)
         {
             _projectsRepository = projectsRepository;
             _userRepository = userRepository;
             _projectAuthorizationService = projectAuthorizationService;
             _projectRolesRepository = projectRolesRepository;
             _projectRolesService = projectRolesService;
+            _tasksService = tasksService;
         }
 
         public async Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request)
         {
-            UserRole userRole = await _userRepository.GetUserRoleId(userId);
+            UserRole userRole = await _userRepository.GetUserRoleIdAsync(userId);
 
             if (userRole != UserRole.Admin)
             {
@@ -37,7 +40,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             var newProject = new Project(request.Name, userId, request.Description, ProjectStatus.Planning, request.StartDate, request.EndDate, request.Currency, request.BudgetAmount);
 
             await _projectsRepository.CreateProjectAsync(newProject);
-            await AssignCreatorRoleToUser(newProject.Id, userId);
+            await _projectRolesService.AssignCreatorRoleToUser(newProject.Id, userId);
 
             newProject = await _projectsRepository.GetProjectWithMembersAsync(newProject.Id);
 
@@ -75,6 +78,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectRoleDeleteError);
             }
 
+            await _tasksService.DeleteAllProjectTasksAsync(projectId);
             await _projectsRepository.DeleteProjectAsync(projectId);
 
             return ServiceResponse.NoContent(ResponseMessage.Projects.DeleteSuccess);
@@ -113,12 +117,29 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             return ServiceResponse<List<ProjectDTO>?>.Ok(projectDtos, null);
         }
 
-        private async Task AssignCreatorRoleToUser(Guid projectId, Guid userId)
+        public async Task<ServiceResponse> RemoveMemberFromProjectAsync(Guid userId, Guid projectId, int memberId)
         {
-            ProjectRole creatorRole = await _projectRolesService.AddCreatorRole(projectId, userId);
-            ProjectMember newMember = new ProjectMember(userId, projectId, creatorRole.Id);
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.RemoveMembers);
+            if (!userHasSufficientPermissions)
+            {
+                return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectMembersRemoveError);
+            }
 
-            await _projectsRepository.AddMemberToProjectAsync(newMember);
+            ProjectMember? targetMember = await _projectsRepository.GetProjectMemberByIdAsync(projectId, memberId);
+            if (targetMember == null)
+            {
+                ServiceResponse.NotFound(ResponseMessage.Projects.MemberNotFound);
+            }
+
+            if (targetMember.ProjectRole.IsCreatorRole)
+            {
+                ServiceResponse.Forbidden(ResponseMessage.Projects.CreatorRemoveFail);
+            }
+
+            await _tasksService.RemoveCreatorFromTasksAsync(projectId, memberId);
+            await _projectsRepository.RemoveMemberFromProjectAsync(projectId, memberId);
+
+            return ServiceResponse.NoContent(ResponseMessage.Projects.MemberRemoveSuccess);
         }
     };
 }
