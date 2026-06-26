@@ -121,7 +121,7 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             double tokenExpiryTime = double.TryParse(_configuration["Jwt:ExpiryMinutes"], out double value) ? value : 60.0;
 
