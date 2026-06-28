@@ -23,7 +23,7 @@ Steps to start the API:
 git clone https://github.com/Filip-A25/collaborative-project-management-backend.git
 ```
 
-Create `.env` file with environment variables based on `.env.example` with a database password (`MSSQL_PASSWORD`) and your JWT secret key (`JWT_SECRET`).
+Create `.env` file with environment variables based on `.env.example`.
 
 ```bash
 # Start the API and database containers
