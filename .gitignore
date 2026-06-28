@@ -484,9 +484,6 @@ $RECYCLE.BIN/
 **/bin/
 **/obj/
 
-# Secrets
-**/appsettings.Development.json
-
 # Visual Studio
 .vs/
 
