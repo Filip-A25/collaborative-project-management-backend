@@ -1,0 +1,35 @@
+name: collaborative-project-management
+
+services:
+  api:
+    build: .
+    container_name: api
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+    ports:
+      - 8080:8080
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Server=db,1433;Database=collaborative-project-management;User Id=sa;Password='${MSSQL_PASSWORD}';TrustServerCertificate=True;
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server-db
+    ports:
+      - 14333:1433
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_PASSWORD}
+      ACCEPT_EULA: "Y"
+    volumes:
+      - mssql-db:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${MSSQL_PASSWORD}" -C -Q "SELECT 1" -b
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mssql-db:
