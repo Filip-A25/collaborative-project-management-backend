@@ -38,20 +38,6 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
 
             await _userRepository.CreateAsync(user);
 
-            UserDTO userData = new UserDTO
-            {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Role = user.Role
-            };
-
-            string? authToken = GenerateJWTToken(user);
-
-            if (authToken == null) return ServiceResponse.InternalServerError(ResponseMessage.Common.InternalError);
-
             return ServiceResponse.Ok(ResponseMessage.Auth.RegisterSuccess);
         }
 
@@ -104,7 +90,7 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
 
         private string? GenerateJWTToken(User user)
         {
-            string jwtSecretKey = _configuration["Jwt:Key"];
+            string jwtSecretKey = _configuration["Jwt:Secret"];
             string jwtIssuer = _configuration["Jwt:Issuer"];
             string jwtAudience = _configuration["Jwt:Audience"];
 
