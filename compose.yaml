@@ -13,6 +13,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: Server=db,1433;Database=collaborative-project-management;User Id=sa;Password='${MSSQL_PASSWORD}';TrustServerCertificate=True;
+      Jwt__Secret: ${JWT_SECRET}
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
