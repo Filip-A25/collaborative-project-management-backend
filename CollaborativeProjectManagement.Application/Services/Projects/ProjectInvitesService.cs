@@ -35,6 +35,12 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse.NotFound(ResponseMessage.Auth.UserNotFound);
             }
 
+            List<ProjectMember>? currentMembers = await _projectsRepository.GetAllProjectMembers(projectId);   
+            if (currentMembers != null && currentMembers.Any(member => member.UserId == userId))
+            {
+                return ServiceResponse.Conflict(ResponseMessage.ProjectInvites.InvitesUserAlreadyMemberError);
+            }
+
             ProjectInvite newProjectInvite = new ProjectInvite(projectId, request.InvitedUserId, request.RoleId, request.ExpiresAt);
 
             await _projectInvitesRepository.CreateProjectInviteAsync(newProjectInvite);

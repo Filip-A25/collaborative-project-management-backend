@@ -69,6 +69,8 @@ builder.Services.AddScoped<ITaskTypesService, TaskTypesService>();
 builder.Services.AddScoped<ITaskTypesRepository, TaskTypesRepository>();
 builder.Services.AddScoped<ITaskCommentsRepository, TaskCommentsRepository>();
 builder.Services.AddScoped<ITaskCommentsService, TaskCommentsService>();
+builder.Services.AddScoped<IPermissionsRepository, PermissionsRepository>();
+builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 
 var app = builder.Build();
 

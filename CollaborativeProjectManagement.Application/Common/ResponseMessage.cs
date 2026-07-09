@@ -63,6 +63,7 @@
             public const string InvitesCreateError = "User does not have sufficient permissions to create invites.";
             public const string InvitesDeleteError = "User does not have sufficient permissions to delete invites.";
             public const string InvitesFetchError = "User does not have sufficient permissions to fetch project invites.";
+            public const string InvitesUserAlreadyMemberError = "User is already a member of the project.";
 
             // Success messages
             public const string CreateSuccess = "User has been invited to a project.";

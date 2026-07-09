@@ -59,6 +59,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
             return await _dbContext.Projects
                 .Include(project => project.ProjectMembers)
                 .ThenInclude(member => member.User)
+                .Include(project => project.ProjectMembers)
+                .ThenInclude(member => member.ProjectRole)
+                .Include(project => project.ProjectMembers)
+                .ThenInclude(member => member.ProjectRole)
+                .ThenInclude(role => role.Permissions)
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
