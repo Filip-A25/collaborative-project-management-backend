@@ -1,6 +1,6 @@
 # Collaborative Project Management API
 
-REST API kreiranje, upravljanje i suradnju na projektima. API je razvijen pomoću .NET 9.0, Entity Framework Core-a i SQL Server baze podataka.
+REST API za kreiranje, upravljanje i suradnju na projektima. API je razvijen pomoću .NET 9.0, Entity Framework Core-a i SQL Server baze podataka.
 
 ## Preduvjeti za pokretanje
 
