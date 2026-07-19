@@ -1,33 +1,33 @@
 # Collaborative Project Management API
 
-A REST API for creating, managing and collaborating on projects. API is built with .NET 9.0, Entity Framework Core and SQL Server database.
+REST API kreiranje, upravljanje i suradnju na projektima. API je razvijen pomoću .NET 9.0, Entity Framework Core-a i SQL Server baze podataka.
 
-## Requirements
+## Preduvjeti za pokretanje
 
 - [Docker](https://docs.docker.com/get-started/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install)
 
-## Configuration
+## Konfiguracija
 
-| Env Variable     | Description                         | Example                   |
-| ---------------- | ----------------------------------- | ------------------------- |
-| `MSSQL_PASSWORD` | Database password for the `sa` user | `CPMApiPassword000!`      |
-| `JWT_SECRET`     | String used for signing tokens      | `strong-generated-string` |
+| Varijable okruženja | Opis                                    | Primjer                   |
+| ------------------- | --------------------------------------- | ------------------------- |
+| `MSSQL_PASSWORD`    | Lozinka baze podataka za korisnika `sa` | `CPMApiPassword000!`      |
+| `JWT_SECRET`        | Niz znakova za potpisivanje tokena      | `strong-generated-string` |
 
-## Quickstart in Docker
+## Brzo pokretanje u Dockeru
 
-Steps to start the API:
+Koraci za pokretanje API-ja:
 
 ```bash
-# Clone the repo
+# Klonirajte repozitorij
 git clone https://github.com/Filip-A25/collaborative-project-management-backend.git
 ```
 
-Create `.env` file with environment variables based on `.env.example`.
+Stvorite `.env` datoteku s varijablama okruženja na temelju `.env.example`.
 
 ```bash
-# Start the API and database containers
+# Pokrenite API i Docker kontejnere
 docker compose up -d --build
 ```
 
-Database migrations are applied automatically by the API.
+Migracije baze podataka primjenjuju se automatski prilikom prvog pokretanja API-ja.
