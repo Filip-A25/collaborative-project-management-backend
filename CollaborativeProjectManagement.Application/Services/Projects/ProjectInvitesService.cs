@@ -28,7 +28,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageRoles);
             if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectInvites.InvitesCreateError);
 
-            User? invitedUser = await _userRepository.GetUserByIdAsync(userId);
+            User? invitedUser = await _userRepository.GetUserByIdAsync(request.InvitedUserId);
 
             if (invitedUser == null)
             {
@@ -36,7 +36,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             }
 
             List<ProjectMember>? currentMembers = await _projectsRepository.GetAllProjectMembers(projectId);   
-            if (currentMembers != null && currentMembers.Any(member => member.UserId == userId))
+            if (currentMembers != null && currentMembers.Any(member => member.UserId == request.InvitedUserId))
             {
                 return ServiceResponse.Conflict(ResponseMessage.ProjectInvites.InvitesUserAlreadyMemberError);
             }

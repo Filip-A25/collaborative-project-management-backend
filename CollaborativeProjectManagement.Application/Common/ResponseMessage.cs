@@ -36,6 +36,7 @@
             public const string ProjectMembersRemoveError = "User does not have sufficient permissions to remove members from this project.";
 
             // Success messages
+            public const string CreateSuccess = "Project has been successfully created.";
             public const string DeleteSuccess = "Project has been successfully deleted.";
             public const string MemberRemoveSuccess = "Member has been successfully removed from the project.";
         }
@@ -44,7 +45,7 @@
         {
             // Error messages
             public const string RoleNotFound = "Role could not be found.";
-
+            public const string ProjectIdMissing = "Project ID needs to be provided to create a role.";
             // Unauthorized role errors
             public const string RolesManageError = "User does not have sufficient permissions to manage project roles.";
 

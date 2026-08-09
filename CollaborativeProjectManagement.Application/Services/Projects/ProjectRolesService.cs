@@ -24,18 +24,20 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
         public async Task<ServiceResponse<ProjectRoleDTO?>> CreateProjectRoleAsync(Guid userId, CreateProjectRoleRequest request)
         {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId, userId, Permission.ManageRoles);
+            if (request.ProjectId == null) return ServiceResponse<ProjectRoleDTO?>.BadRequest(null, ResponseMessage.ProjectRoles.ProjectIdMissing);
+
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(request.ProjectId.Value, userId, Permission.ManageRoles);
             if (!userHasSufficientPermissions) return ServiceResponse<ProjectRoleDTO?>.Forbidden(null, ResponseMessage.ProjectRoles.RolesManageError);
 
             var newProjectRole = new ProjectRole
             {
-                ProjectId = request.ProjectId,
+                ProjectId = request.ProjectId.Value,
                 Name = request.Name,
                 Color = request.Color
             };
 
             await _projectRolesRepository.CreateProjectRoleAsync(newProjectRole);
-            newProjectRole = await _projectRolesRepository.GetProjectRoleWithPermissionsAsync(request.ProjectId, newProjectRole.Id);
+            newProjectRole = await _projectRolesRepository.GetProjectRoleWithPermissionsAsync(request.ProjectId.Value, newProjectRole.Id);
 
             if (request.PermissionIds != null && request.PermissionIds.Any())
             {

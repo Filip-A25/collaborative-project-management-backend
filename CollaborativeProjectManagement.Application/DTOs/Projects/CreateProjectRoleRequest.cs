@@ -4,8 +4,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {
     public class CreateProjectRoleRequest
     {
-        [Required]
-        public Guid ProjectId { get; set; }
+        public Guid? ProjectId { get; set; }
         [Required]
         [MaxLength(60)]
         public string Name { get; set; }

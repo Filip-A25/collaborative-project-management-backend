@@ -26,5 +26,6 @@ namespace CollaborativeProjectManagement.Application.Common
         public static ServiceResponse<T> NotFound(T? data, string? message) => new() { Success = false, StatusCode = HttpStatusCode.NotFound, Data = data, Message = message };
         public static ServiceResponse<T> Unauthorized(T? data, string? message) => new() { Success = false, StatusCode = HttpStatusCode.Unauthorized, Data = data, Message = message };
         public static ServiceResponse<T> Forbidden(T? data, string? message) => new() { Success = false, StatusCode = HttpStatusCode.Forbidden, Data = data, Message = message };
+        public static ServiceResponse<T> BadRequest(T? data, string? message) => new() { Success = false, StatusCode = HttpStatusCode.BadRequest, Data = data, Message = message };
     }
 }

@@ -4,6 +4,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {
     public class ProjectMemberDTO
     {
+        public required int Id {get; set;}
         public required Guid UserId { get; set; }
         public string? Username { get; set; }
         public string? Email { get; set; }
@@ -13,6 +14,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
 
         public static ProjectMemberDTO FromEntity(ProjectMember member) => new()
         {
+            Id = member.Id,
             UserId = member.UserId,
             Username = member.User?.Username,
             Email = member.User?.Email,
