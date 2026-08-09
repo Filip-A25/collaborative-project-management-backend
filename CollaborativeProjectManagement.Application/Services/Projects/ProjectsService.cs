@@ -8,27 +8,27 @@ using CollaborativeProjectManagement.Domain.Interfaces.Auth;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
 
 namespace CollaborativeProjectManagement.Application.Services.Projects
-{
-    public class ProjectsService : IProjectsService
-    {
-        private readonly IProjectsRepository _projectsRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IProjectAuthorizationService _projectAuthorizationService;
-        private readonly IProjectRolesRepository _projectRolesRepository;   
-        private readonly IProjectRolesService _projectRolesService;
-        private readonly ITasksService _tasksService;
-
-        public ProjectsService(IProjectsRepository projectsRepository, IUserRepository userRepository, IProjectAuthorizationService projectAuthorizationService, IProjectRolesRepository projectRolesRepository, IProjectRolesService projectRolesService, ITasksService tasksService)
+{   
+        public class ProjectsService : IProjectsService
         {
-            _projectsRepository = projectsRepository;
-            _userRepository = userRepository;
-            _projectAuthorizationService = projectAuthorizationService;
-            _projectRolesRepository = projectRolesRepository;
-            _projectRolesService = projectRolesService;
-            _tasksService = tasksService;
-        }
+        private readonly IProjectsRepository _projectsRepository;   
+        private readonly IUserRepository _userRepository;
+        private readonly IProjectAuthorizationService _projectAuthorizationService; 
+        private readonly IProjectRolesRepository _projectRolesRepository;       
+            private readonly IProjectRolesService _projectRolesService;
+            private readonly ITasksService _tasksService;
 
-        public async Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request)
+            public ProjectsService(IProjectsRepository projectsRepository, IUserRepository userRepository, IProjectAuthorizationService projectAuthorizationService, IProjectRolesRepository projectRolesRepository, IProjectRolesService projectRolesService, ITasksService tasksService)
+            {
+                _projectsRepository = projectsRepository;
+                _userRepository = userRepository;
+                _projectAuthorizationService = projectAuthorizationService;
+                _projectRolesRepository = projectRolesRepository;
+                _projectRolesService = projectRolesService;
+                _tasksService = tasksService;
+            }
+
+            public async Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request)
         {
             UserRole userRole = await _userRepository.GetUserRoleIdAsync(userId);
 
@@ -60,7 +60,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
             await _projectRolesRepository.CreateProjectRolesAsync(newProjectRoles);
 
-            return ServiceResponse<ProjectDTO?>.Created(newProjectDto, null);
+            return ServiceResponse<ProjectDTO?>.Created(newProjectDto, ResponseMessage.Projects.CreateSuccess);
         }
 
         public async Task<ServiceResponse> DeleteProjectAsync(Guid projectId, Guid userId)

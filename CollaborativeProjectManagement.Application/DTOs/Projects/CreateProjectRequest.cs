@@ -17,6 +17,6 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
         [Required]
         public required string Currency { get; set; }
         public double? BudgetAmount { get; set; }
-        public List<ProjectRole>? Roles { get; set; }
+        public CreateProjectRoleRequest[]? Roles { get; set; }
     }
 }
