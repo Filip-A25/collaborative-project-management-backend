@@ -4,6 +4,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
 {
     public class ProjectRoleDTO
     {
+        public int Id { get; set; }
         public required string Name { get; set; }
         public required string Color { get; set; }
         public bool IsCreatorRole { get; set; }
@@ -11,6 +12,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
 
         public static ProjectRoleDTO FromEntity(ProjectRole role) => new()
         {
+            Id = role.Id,
             Name = role.Name,
             Color = role.Color,
             IsCreatorRole = role.IsCreatorRole,

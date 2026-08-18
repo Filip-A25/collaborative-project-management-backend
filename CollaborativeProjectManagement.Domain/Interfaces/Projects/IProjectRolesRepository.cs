@@ -11,5 +11,9 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task DeleteProjectRolesAsync(List<int> projectRoleIds, Guid projectId);
         Task<ProjectRole?> GetProjectRoleAsync(Guid projectId, int projectRoleId);
         Task<ProjectRole?> GetProjectRoleWithPermissionsAsync(Guid projectId, int projectRoleId);
+        Task<List<ProjectRole>> GetAllRolesForProject(Guid projectId);
+        Task UnassignPermissionsFromRole (int roleId, List<int> permissionIds);
+        void AddRolePermissions (List<RolePermission> rolePermissions);
+        Task UpdateProjectRolesAsync();
     }
 }
