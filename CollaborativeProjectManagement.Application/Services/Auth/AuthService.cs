@@ -102,8 +102,12 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim("id", user.Id.ToString()),
+                new Claim("email", user.Email),
+                new Claim("role", user.Role.ToString()),
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName),
+                new Claim("username", user.Username),
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));

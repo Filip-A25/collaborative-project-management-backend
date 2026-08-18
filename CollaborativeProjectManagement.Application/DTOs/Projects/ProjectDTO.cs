@@ -17,6 +17,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public required ICollection<ProjectMemberDTO> ProjectMembers { get; set; }
+        public required ICollection<ProjectRoleDTO> Roles { get; set; }
 
         public static ProjectDTO FromEntity(Project project) => new()
         {
@@ -32,7 +33,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
             Currency = project.Currency,
             CreatedAt = project.CreatedAt,
             UpdatedAt = project.UpdatedAt,
-            ProjectMembers = project.ProjectMembers.Select(member => ProjectMemberDTO.FromEntity(member)).ToList()
+            ProjectMembers = project.ProjectMembers.Select(member => ProjectMemberDTO.FromEntity(member)).ToList(),
+            Roles = project.ProjectRoles.Select(role => ProjectRoleDTO.FromEntity(role)).ToList()
         };
     }
 }

@@ -72,5 +72,26 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
                 .Include(role => role.Permissions)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<ProjectRole>> GetAllRolesForProject(Guid projectId)
+        {
+            return await _dbContext.ProjectRoles.Where(role => role.ProjectId == projectId).Include(role => role.Permissions).ToListAsync();
+        }
+
+        public async Task UnassignPermissionsFromRole (int roleId, List<int> permissionIds)
+        {
+            List<RolePermission> rolePermissionsToRemove = await _dbContext.RolePermissions.Where(rolePermission => rolePermission.ProjectRoleId == roleId).Where(rolePermission => permissionIds.Contains(rolePermission.PermissionId)).ToListAsync();
+            _dbContext.RolePermissions.RemoveRange(rolePermissionsToRemove);
+        }
+
+        public void AddRolePermissions (List<RolePermission> rolePermissions)
+        {
+            _dbContext.RolePermissions.AddRange(rolePermissions);
+        }
+
+        public async Task UpdateProjectRolesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

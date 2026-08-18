@@ -17,5 +17,6 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task<ProjectMember?> GetProjectMemberAsync(Guid projectId, Guid userId);
         Task<ProjectMember?> GetProjectMemberByIdAsync(Guid projectId, int memberId);
         Task RemoveMemberFromProjectAsync(Guid projectId, int memberId);
+        Task UpdateProjectAsync();
     }
 }

@@ -61,8 +61,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
                 .ThenInclude(member => member.User)
                 .Include(project => project.ProjectMembers)
                 .ThenInclude(member => member.ProjectRole)
-                .Include(project => project.ProjectMembers)
-                .ThenInclude(member => member.ProjectRole)
+                .Include(project => project.ProjectRoles)
                 .ThenInclude(role => role.Permissions)
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
@@ -90,6 +89,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
                 .Include(project => project.ProjectMembers)
                 .ThenInclude(member => member.ProjectRole)
                 .ThenInclude(role => role.Permissions)
+                .OrderBy(project => project.CreatedAt)
                 .ToListAsync();
         }
 
@@ -119,6 +119,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
             await _dbContext.ProjectMembers
                 .Where(member => member.Id == memberId)
                 .ExecuteDeleteAsync();
+        }
+
+        public async Task UpdateProjectAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

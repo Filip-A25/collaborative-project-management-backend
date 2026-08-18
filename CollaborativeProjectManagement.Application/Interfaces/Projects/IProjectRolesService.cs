@@ -10,5 +10,6 @@ namespace CollaborativeProjectManagement.Application.Interfaces.Projects
         Task<ServiceResponse> AddProjectRolePermissionsAsync(Guid userId, int roleId, AddProjectRolePermissionsRequest request);
         Task<ServiceResponse> DeleteProjectRolesAsync(List<int> projectRoleIds, Guid projectId, Guid userId);
         Task AssignCreatorRoleToUser(Guid projectId, Guid userId);
+        Task BulkUpdateProjectRoles(Guid projectId, List<UpdateProjectRoleRequest>? roleRequests);
     }
 }

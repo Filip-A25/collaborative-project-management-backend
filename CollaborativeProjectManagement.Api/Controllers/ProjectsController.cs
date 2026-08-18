@@ -75,7 +75,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             }
             catch
-            {
+            {   
                 return HandleInternalError();
             }
         }
@@ -87,6 +87,21 @@ namespace CollaborativeProjectManagement.Api.Controllers
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 ServiceResponse response = await _projectsService.RemoveMemberFromProjectAsync(userId, projectId, memberId);
+                return HandleResponse(response);
+            }
+            catch
+            {
+                return HandleInternalError();
+            }
+        }
+
+        [HttpPatch("{projectId}")]
+        public async Task<IActionResult> UpdateProject(Guid projectId, UpdateProjectRequest request)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse response = await _projectsService.UpdateProjectAsync(userId, projectId, request);
                 return HandleResponse(response);
             }
             catch

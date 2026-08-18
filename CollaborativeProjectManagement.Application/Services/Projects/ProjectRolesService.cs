@@ -1,4 +1,5 @@
-﻿using CollaborativeProjectManagement.Application.Common;
+﻿using System.Diagnostics.Eventing.Reader;
+using CollaborativeProjectManagement.Application.Common;
 using CollaborativeProjectManagement.Application.DTOs.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
@@ -13,7 +14,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
         private readonly IProjectsRepository _projectsRepository;
 
         private const string CreatorRoleName = "Creator";
-        private const string CreatorRoleDefaultColorHex = "cf233a";
+        private const string DefaultCreatorRoleColor = "blue";
 
         public ProjectRolesService(IProjectRolesRepository projectRolesRepository, IProjectAuthorizationService projectAuthorizationService, IProjectsRepository projectsRepository)
         {
@@ -81,7 +82,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             {
                 ProjectId = projectId,
                 Name = CreatorRoleName,
-                Color = CreatorRoleDefaultColorHex,
+                Color = DefaultCreatorRoleColor,
                 IsCreatorRole = true
             };
 
@@ -115,6 +116,69 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             }).ToList();
 
             await _projectRolesRepository.AddRolePermissionsAsync(rolePermissions);
+        }
+
+        public async Task BulkUpdateProjectRoles(Guid projectId, List<UpdateProjectRoleRequest>? roleRequests)
+        {
+            List<ProjectRole>? dbRoles = await _projectRolesRepository.GetAllRolesForProject(projectId);
+            Dictionary<int, ProjectRole> dbRolesById = dbRoles.ToDictionary(role => role.Id);           
+
+            foreach (UpdateProjectRoleRequest roleRequest in roleRequests)
+            {
+                int roleId;
+                List<int> permissionsToAdd = [];
+                List<int> requestPermissionsId = roleRequest.Permissions != null ? roleRequest.Permissions.Select(permission => permission.Id).ToList() : [];
+
+                if (dbRolesById.TryGetValue(roleRequest.Id, out ProjectRole currentRole))
+                {
+                    roleId = currentRole.Id;
+
+                    currentRole.Id = roleRequest.Id;
+                    currentRole.Name = roleRequest.Name;
+                    currentRole.Color = roleRequest.Color;
+
+                    List<int>? currentRolePermissions = currentRole.Permissions?.Select(permission => permission.Id).ToList();
+                    bool doesRoleHaveExistingPermissions = currentRolePermissions != null && currentRolePermissions.Any();
+
+                    if (roleRequest.Permissions != null)
+                    {
+                        if (doesRoleHaveExistingPermissions)
+                        {
+                            List<int> permissionsForRemoval = currentRolePermissions.Except(requestPermissionsId).ToList();
+                            await _projectRolesRepository.UnassignPermissionsFromRole(currentRole.Id, permissionsForRemoval);                            
+                        }
+
+                        permissionsToAdd = requestPermissionsId.Except(currentRolePermissions).ToList();
+                    }
+                } else
+                {
+
+                    ProjectRole newProjectRole = new ProjectRole
+                    {
+                        ProjectId = projectId,
+                        Name = roleRequest.Name,
+                        Color = roleRequest.Color
+                    };
+
+                    ProjectRole newRole = await _projectRolesRepository.CreateProjectRoleAsync(newProjectRole);
+                    roleId = newRole.Id;
+                
+                    permissionsToAdd = requestPermissionsId ?? [];
+                }
+
+                if (permissionsToAdd.Any())
+                {
+                    List<RolePermission> newRolePermissions = permissionsToAdd.Select(permissionId => new RolePermission
+                    {
+                        ProjectRoleId = roleId,
+                        PermissionId = permissionId
+                    }).ToList();
+
+                    _projectRolesRepository.AddRolePermissions(newRolePermissions);
+                }
+
+                await _projectRolesRepository.UpdateProjectRolesAsync();
+            }             
         }
     }
 }

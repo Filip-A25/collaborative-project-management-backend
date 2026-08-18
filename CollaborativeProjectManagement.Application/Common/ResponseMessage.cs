@@ -28,7 +28,7 @@
             public const string UserNotMember = "User is not a member of this project.";
             public const string MemberNotFound = "Member could not be found.";
             public const string CreatorRemoveFail = "Creator cannot be removed from the project.";
-
+    
             // Unauthorized role errors
             public const string ProjectRoleDeleteError = "User does not have sufficient permissions to delete the project.";
             public const string ProjectRoleViewError = "User does not have sufficient permissions to view the project.";
@@ -39,6 +39,7 @@
             public const string CreateSuccess = "Project has been successfully created.";
             public const string DeleteSuccess = "Project has been successfully deleted.";
             public const string MemberRemoveSuccess = "Member has been successfully removed from the project.";
+            public const string UpdateSuccess = "Project has been successfully updated.";
         }
 
         public static class ProjectRoles

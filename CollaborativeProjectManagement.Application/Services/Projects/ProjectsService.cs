@@ -15,8 +15,8 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
         private readonly IUserRepository _userRepository;
         private readonly IProjectAuthorizationService _projectAuthorizationService; 
         private readonly IProjectRolesRepository _projectRolesRepository;       
-            private readonly IProjectRolesService _projectRolesService;
-            private readonly ITasksService _tasksService;
+        private readonly IProjectRolesService _projectRolesService;
+        private readonly ITasksService _tasksService;
 
             public ProjectsService(IProjectsRepository projectsRepository, IUserRepository userRepository, IProjectAuthorizationService projectAuthorizationService, IProjectRolesRepository projectRolesRepository, IProjectRolesService projectRolesService, ITasksService tasksService)
             {
@@ -99,7 +99,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse<ProjectDTO?>.NotFound(null, ResponseMessage.Projects.ProjectNotFound);
             }
 
-            ProjectDTO projectDto = ProjectDTO.FromEntity(project);
+            ProjectDTO projectDto = ProjectDTO.FromEntity(project);   
             return ServiceResponse<ProjectDTO?>.Ok(projectDto, null);
         }
 
@@ -140,6 +140,36 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             await _projectsRepository.RemoveMemberFromProjectAsync(projectId, memberId);
 
             return ServiceResponse.NoContent(ResponseMessage.Projects.MemberRemoveSuccess);
+        }
+
+        public async Task<ServiceResponse<ProjectDTO?>> UpdateProjectAsync(Guid userId, Guid projectId, UpdateProjectRequest request)
+        {
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageProject);
+            if (!userHasSufficientPermissions) return ServiceResponse<ProjectDTO?>.Forbidden(null, ResponseMessage.Projects.ProjectManageError);
+        
+        
+            Project? targetProject = await _projectsRepository.GetProjectWithFullMembersAsync(projectId);
+            if (targetProject == null)
+            {
+                return ServiceResponse<ProjectDTO?>.NotFound(null, ResponseMessage.Projects.ProjectNotFound);
+            }
+
+            targetProject.Name = request.Name ?? targetProject.Name;
+            targetProject.Description = request.Description ?? targetProject.Description;
+            targetProject.StartDate = request.StartDate ?? targetProject.StartDate;
+            targetProject.EndDate = request.EndDate ?? targetProject.EndDate;
+            targetProject.Currency = request.Currency ?? targetProject.Currency;
+            targetProject.BudgetAmount = request.BudgetAmount ?? targetProject.BudgetAmount;
+
+            if (request.Roles != null && request.Roles.Count > 0)
+            {
+                await _projectRolesService.BulkUpdateProjectRoles(projectId, request.Roles);                
+            }
+
+            await _projectsRepository.UpdateProjectAsync();
+
+            ProjectDTO projectDto = ProjectDTO.FromEntity(targetProject);
+            return ServiceResponse<ProjectDTO?>.Ok(projectDto, ResponseMessage.Projects.UpdateSuccess);
         }
     };
 }
