@@ -50,6 +50,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
         }
 
         [HttpPatch]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
         {
             try
@@ -65,6 +66,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetUser()
         {
             try
