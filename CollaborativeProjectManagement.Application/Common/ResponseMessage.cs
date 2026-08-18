@@ -13,10 +13,13 @@
             public const string RegisterConflict = "An account with this email already exists.";
             public const string UserNotFound = "User could not be found.";
             public const string IncorrectPassword = "Incorrect password entered.";
+            public const string NonUniqueUsername = "This username is already taken.";
+            public const string NonUniqueEmail = "This email is already taken.";
 
             // Success messages
             public const string RegisterSuccess = "User has been successfully registered.";
             public const string LoginSuccess = "User has successfully logged in.";
+            public const string UpdateSuccess = "User has been successfully updated.";
         }
 
         public static class Projects

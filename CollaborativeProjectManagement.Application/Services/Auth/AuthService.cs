@@ -125,5 +125,48 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<ServiceResponse<UserDTO?>> UpdateUserAsync(Guid userId, UpdateUserRequest request)
+        {
+            User? targetUser = await _userRepository.GetUserByIdAsync(userId);
+            if (targetUser == null)
+            {
+                return ServiceResponse<UserDTO?>.NotFound(null, ResponseMessage.Auth.UserNotFound);
+            }
+
+            if (request.Username != null && targetUser.Username != request.Username)
+            {
+                bool doesIdenticalUsernameExist = await _userRepository.CheckForExistingUsernameAsync(userId, request.Username);
+                if (doesIdenticalUsernameExist) return ServiceResponse<UserDTO?>.Conflict(null, ResponseMessage.Auth.NonUniqueUsername);
+            }
+
+            if (request.Email != null && targetUser.Email != request.Email)
+            {
+                bool doesIdenticalEmailExist = await _userRepository.CheckForExistingEmailAsync(userId, request.Email);
+                if (doesIdenticalEmailExist) return ServiceResponse<UserDTO?>.Conflict(null, ResponseMessage.Auth.NonUniqueEmail);
+            }
+
+            targetUser.FirstName = request.FirstName ?? targetUser.FirstName;
+            targetUser.LastName = request.LastName ?? targetUser.LastName;
+            targetUser.Username = request.Username ?? targetUser.Username;
+            targetUser.Email = request.Email ?? targetUser.Email;
+
+            await _userRepository.UpdateUserAsync();
+
+            UserDTO userDto = UserDTO.FromEntity(targetUser);
+            return ServiceResponse<UserDTO?>.Ok(userDto, ResponseMessage.Auth.UpdateSuccess);
+        }
+
+        public async Task<ServiceResponse<UserDTO?>> GetUserAsync(Guid userId)
+        {
+            User? targetUser = await _userRepository.GetUserByIdAsync(userId);
+            if (targetUser == null)
+            {
+                return ServiceResponse<UserDTO?>.NotFound(null, ResponseMessage.Auth.UserNotFound);
+            }
+            
+            UserDTO userDto = UserDTO.FromEntity(targetUser);            
+            return ServiceResponse<UserDTO?>.Ok(userDto, null);
+        }
     }
 }

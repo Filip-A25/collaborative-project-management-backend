@@ -7,5 +7,7 @@ namespace CollaborativeProjectManagement.Application.Interfaces.Auth
     {
         Task<ServiceResponse> RegisterUserAsync(RegisterRequest request);
         Task<ServiceResponse<AuthResponseDTO?>> LoginUserAsync(LoginRequest request);
+        Task<ServiceResponse<UserDTO?>> UpdateUserAsync(Guid userId, UpdateUserRequest request);
+        Task<ServiceResponse<UserDTO?>> GetUserAsync(Guid userId);
     }
 }

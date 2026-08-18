@@ -67,6 +67,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             {
                 builder.HasIndex(invite => new { invite.ProjectId, invite.InvitedUserId }).IsUnique();
             });
+            modelBuilder.Entity<User>(builder =>
+            {
+                builder.HasIndex(user => user.Username).IsUnique();
+            });
+            modelBuilder.Entity<User>(builder =>
+            {
+                builder.HasIndex(user => user.Email).IsUnique();
+            });
         }
     }
 }

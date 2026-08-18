@@ -4,6 +4,7 @@ using CollaborativeProjectManagement.Application.DTOs.Auth;
 using CollaborativeProjectManagement.Application.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CollaborativeProjectManagement.Api.Controllers
 {
@@ -41,6 +42,36 @@ namespace CollaborativeProjectManagement.Api.Controllers
             {
                 ServiceResponse<AuthResponseDTO?> response = await _authService.LoginUserAsync(request);
                 return HandleResponse<AuthResponseDTO?>(response);
+            }
+            catch
+            {
+                return HandleInternalError();
+            }
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser(UpdateUserRequest request)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<UserDTO?> response = await _authService.UpdateUserAsync(userId, request);
+                return HandleResponse<UserDTO?>(response);
+            }
+            catch
+            {
+                return HandleInternalError();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUser()
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<UserDTO?> response = await _authService.GetUserAsync(userId);
+                return HandleResponse<UserDTO?>(response);
             }
             catch
             {
