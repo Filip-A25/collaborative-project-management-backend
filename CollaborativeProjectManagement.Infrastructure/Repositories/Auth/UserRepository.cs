@@ -63,5 +63,20 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
                 .Where(user => userEmails.Contains(user.Email))
                 .ToListAsync();
         }
+
+        public async Task UpdateUserAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckForExistingUsernameAsync(Guid userId, string username)
+        {
+            return await _dbContext.Users.AnyAsync(user => user.Username == username && user.Id != userId);
+        }
+
+        public async Task<bool> CheckForExistingEmailAsync(Guid userId, string email)
+        {
+            return await _dbContext.Users.AnyAsync(user => user.Email == email && user.Id != userId);
+        }
     }
 }
