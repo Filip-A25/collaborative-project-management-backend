@@ -154,12 +154,15 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse<ProjectDTO?>.NotFound(null, ResponseMessage.Projects.ProjectNotFound);
             }
 
+            ProjectStatus parsedStatus = Enum.Parse<ProjectStatus>(request.Status);
+
             targetProject.Name = request.Name ?? targetProject.Name;
             targetProject.Description = request.Description ?? targetProject.Description;
             targetProject.StartDate = request.StartDate ?? targetProject.StartDate;
             targetProject.EndDate = request.EndDate ?? targetProject.EndDate;
             targetProject.Currency = request.Currency ?? targetProject.Currency;
             targetProject.BudgetAmount = request.BudgetAmount ?? targetProject.BudgetAmount;
+            targetProject.Status = parsedStatus;
 
             if (request.Roles != null && request.Roles.Count > 0)
             {

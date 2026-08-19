@@ -12,6 +12,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
         [MaxLength(3)]
         public string? Currency { get; set; }
         public double? BudgetAmount { get; set; }
+        public required string Status { get; set; }
         public List<UpdateProjectRoleRequest>? Roles { get; set; }
     }
 }
