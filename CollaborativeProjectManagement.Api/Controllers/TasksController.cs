@@ -90,7 +90,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleResponse(response);
             }
             catch
-            {
+            {   
                 return HandleInternalError();
             }
         }

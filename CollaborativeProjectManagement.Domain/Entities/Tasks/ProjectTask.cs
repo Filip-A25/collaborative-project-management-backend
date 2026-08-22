@@ -17,7 +17,7 @@ namespace CollaborativeProjectManagement.Domain.Entities.Tasks
         [Required]
         public TaskPriority Priority { get; set; }
         [Required]
-        public TaskStatus Status { get; set; }
+        public ProjectTaskStatus Status { get; set; }
         public int? TypeId { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? DueDate { get; set; }
@@ -28,7 +28,7 @@ namespace CollaborativeProjectManagement.Domain.Entities.Tasks
         public ProjectMember AssignedUser { get; set; }
         public TaskType? Type { get; set; }
 
-        public ProjectTask(Guid projectId, string title, string? description, int creatorId, int? assignedTo, int priority, int status, int? type, DateOnly? startDate, DateOnly? dueDate)
+        public ProjectTask(Guid projectId, string title, string? description, int creatorId, int? assignedTo, TaskPriority priority, ProjectTaskStatus status, int? type, DateOnly? startDate, DateOnly? dueDate)
         {
             Id = Guid.NewGuid();
             ProjectId = projectId;
@@ -36,8 +36,8 @@ namespace CollaborativeProjectManagement.Domain.Entities.Tasks
             Description = description;
             CreatorId = creatorId;
             AssignedTo = assignedTo;
-            Priority = (TaskPriority) priority;
-            Status = (TaskStatus) status;
+            Priority = priority;
+            Status = status;
             TypeId = type;
             StartDate = startDate;
             DueDate = dueDate;

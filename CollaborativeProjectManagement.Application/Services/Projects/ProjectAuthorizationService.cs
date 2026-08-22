@@ -16,7 +16,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
         public async Task<bool> CheckIfUserHasSufficientPermissionsAsync(Guid projectId, Guid userId, Permission permissionId)
         {
             List<PermissionEntity>? userPermissions = await _projectRolesRepository.GetProjectMemberRolePermissionsAsync(projectId, userId);
-
+            
             if (userPermissions == null) return false;
             bool userHasSufficientPermissions = userPermissions.Any(permission => permission.Id == (int)permissionId);
 

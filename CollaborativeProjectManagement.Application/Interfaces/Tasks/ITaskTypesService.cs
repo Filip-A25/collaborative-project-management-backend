@@ -10,5 +10,6 @@ namespace CollaborativeProjectManagement.Application.Interfaces.Tasks
         Task<ServiceResponse> DeleteTaskTypeAsync(Guid userId, DeleteTaskTypeRequest request);
         Task<ServiceResponse<TaskType?>> ChangeTaskTypeTitleAsync(Guid userId, Guid projectId, int typeId, ChangeTaskTypeTitleRequest request);
         Task<ServiceResponse<TaskType?>> GetTaskTypeByIdAsync(Guid userId, Guid projectId, int typeId);
+        Task<ServiceResponse<List<TaskTypeDTO>>> GetTaskTypesAsync(Guid projectId, Guid userId);
     }
 }

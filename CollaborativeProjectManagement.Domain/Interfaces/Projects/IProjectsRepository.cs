@@ -13,7 +13,7 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task<Project?> GetProjectAsync(Guid projectId);
         Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId);
         Task<List<Project>> GetAllProjectsForUserAsync(List<Guid> projectIds);
-        Task<List<ProjectMember>?> GetAllProjectMembers(Guid projectId);
+        Task<List<ProjectMember>?> GetAllProjectMembersAsync(Guid projectId);
         Task<ProjectMember?> GetProjectMemberAsync(Guid projectId, Guid userId);
         Task<ProjectMember?> GetProjectMemberByIdAsync(Guid projectId, int memberId);
         Task RemoveMemberFromProjectAsync(Guid projectId, int memberId);

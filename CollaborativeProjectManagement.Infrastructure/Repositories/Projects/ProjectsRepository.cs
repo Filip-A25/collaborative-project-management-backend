@@ -93,10 +93,11 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
                 .ToListAsync();
         }
 
-        public async Task<List<ProjectMember>?> GetAllProjectMembers(Guid projectId)
+        public async Task<List<ProjectMember>?> GetAllProjectMembersAsync(Guid projectId)
         {
             return await _dbContext.ProjectMembers
                 .Where(projectMember => projectMember.ProjectId == projectId)
+                .Include(member => member.User)
                 .ToListAsync();
         }
 

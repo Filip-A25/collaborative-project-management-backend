@@ -21,7 +21,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
             ProjectTask? createdTask = await _dbContext.ProjectTasks
                 .Include(task => task.Creator)
+                    .ThenInclude(member => member.User)
                 .Include(task => task.AssignedUser)
+                    .ThenInclude(member => member.User)
                 .FirstOrDefaultAsync(createdTask => createdTask.Id == task.Id);
 
             return createdTask ?? task;
@@ -39,6 +41,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
         {
             return await _dbContext.ProjectTasks
                 .Where(task => task.ProjectId == projectId)
+                .Include(task => task.Creator)
+                    .ThenInclude(member => member.User)
+                .Include(task => task.AssignedUser)
+                    .ThenInclude(member => member.User)
                 .ToListAsync();
         }
 
@@ -46,7 +52,9 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
         {
             return await _dbContext.ProjectTasks
                 .Include(task => task.Creator)
+                    .ThenInclude(member => member.User)
                 .Include(task => task.AssignedUser)
+                    .ThenInclude(member => member.User)
                 .FirstOrDefaultAsync(task => task.Id == taskId);
         }
 

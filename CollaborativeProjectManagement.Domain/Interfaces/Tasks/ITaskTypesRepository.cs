@@ -8,5 +8,6 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Tasks
         Task DeleteTaskTypeAsync(Guid projectId, int typeId);
         Task<TaskType?> ChangeTaskTypeTitleAsync(Guid projectId, int typeId, string title);
         Task<TaskType?> GetTaskTypeByIdAsync(Guid projectId, int typeId);
+        Task<List<TaskType>> GetTaskTypesAsync(Guid projectId);
     }
 }

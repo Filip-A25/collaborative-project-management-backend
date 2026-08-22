@@ -10,8 +10,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
         public string? Description { get; set; }
         public int? AssignedTo { get; set; }
         [Required]
-        public int Priority { get; set; }
-        public int Status { get; set; }
+        public required string Priority { get; set; }
+        public required string Status { get; set; }
         public int? Type { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? DueDate { get; set; }

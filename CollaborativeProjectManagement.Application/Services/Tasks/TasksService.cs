@@ -33,7 +33,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
                 return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Projects.MemberNotFound);
             }
 
-            List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembers(projectId);
+            List<ProjectMember>? allProjectMembers = await _projectsRepository.GetAllProjectMembersAsync(projectId);
             bool projectHasAssignedMember = allProjectMembers != null ? allProjectMembers.Any(member => member.Id == request.AssignedTo) : false;
 
             if (!projectHasAssignedMember)
@@ -41,7 +41,10 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
                 return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.MemberNotInProject);
             }
 
-            ProjectTask newTask = new ProjectTask(projectId, request.Title, request.Description, member.Id, request.AssignedTo, request.Priority, request.Status, request.Type, request.StartDate, request.DueDate);
+            TaskPriority priority = Enum.Parse<TaskPriority>(request.Priority);
+            ProjectTaskStatus status = Enum.Parse<ProjectTaskStatus>(request.Status);
+
+            ProjectTask newTask = new ProjectTask(projectId, request.Title, request.Description, member.Id, request.AssignedTo, priority, status, request.Type, request.StartDate, request.DueDate);
             await _tasksRepository.CreateTaskAsync(newTask);
 
             ProjectTaskDTO taskDto = ProjectTaskDTO.FromEntity(newTask);
@@ -70,7 +73,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             if (!userHasSufficientPermissions) return ServiceResponse<List<ProjectTaskDTO>?>.Forbidden(null, ResponseMessage.Tasks.ViewTasksError);
 
             List<ProjectTask>? allTasks = await _tasksRepository.GetAllProjectTasksAsync(projectId);
-            if (allTasks == null || !allTasks.Any())
+            if (allTasks == null || allTasks.Any() == false)
             {
                 return ServiceResponse<List<ProjectTaskDTO>?>.NotFound(null, ResponseMessage.Tasks.ProjectTasksNotFound);
             }
@@ -105,11 +108,24 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
                 return ServiceResponse<ProjectTaskDTO?>.NotFound(null, ResponseMessage.Tasks.TaskNotFound);
             }
 
+            if (request.AssignedTo != targetTask.AssignedTo)
+            {
+                List<ProjectMember>? projectMembers = await _projectsRepository.GetAllProjectMembersAsync(projectId);
+                if (projectMembers != null)
+                {
+                    ProjectMember? assignedMember = projectMembers.Find(member => member.Id == request.AssignedTo);
+                    targetTask.AssignedUser = assignedMember;        
+                }
+            }
+
+            TaskPriority priority = Enum.Parse<TaskPriority>(request.Priority);
+            ProjectTaskStatus status = Enum.Parse<ProjectTaskStatus>(request.Status);
+
             targetTask.Title = request.Title ?? targetTask.Title;
             targetTask.Description = request.Description ?? targetTask.Description;
             targetTask.AssignedTo = request.AssignedTo ?? targetTask.AssignedTo;
-            targetTask.Priority = request.Priority ?? targetTask.Priority;
-            targetTask.Status = request.Status ?? targetTask.Status;
+            targetTask.Priority = priority;
+            targetTask.Status = status;
             targetTask.TypeId = request.TypeId ?? targetTask.TypeId;
             targetTask.StartDate = request.StartDate ?? targetTask.StartDate;
             targetTask.DueDate = request.DueDate ?? targetTask.DueDate;

@@ -81,5 +81,20 @@ namespace CollaborativeProjectManagement.Api.Controllers
                 return HandleInternalError();
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTaskTypes(Guid projectId)
+        {
+            try
+            {
+                Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ServiceResponse<List<TaskTypeDTO>> response = await _taskTypesService.GetTaskTypesAsync(projectId, userId);
+                return HandleResponse(response);
+            }
+            catch
+            {
+                return HandleInternalError();
+            }
+        }
     }
 }
