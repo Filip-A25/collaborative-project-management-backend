@@ -107,5 +107,16 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             TaskType? type = await _taskTypesRepository.GetTaskTypeByIdAsync(projectId, typeId);
             return type != null ? true : false;
         }
+
+        public async Task<ServiceResponse<List<TaskTypeDTO>>> GetTaskTypesAsync(Guid projectId, Guid userId)
+        {
+            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageProject);
+            if (!userHasSufficientPermissions) return ServiceResponse<List<TaskTypeDTO>>.Forbidden(null, ResponseMessage.Projects.ProjectManageError);
+
+            List<TaskType> taskTypes = await _taskTypesRepository.GetTaskTypesAsync(projectId);
+            List<TaskTypeDTO> taskTypeDtos = taskTypes.Select(taskType => TaskTypeDTO.FromEntity(taskType)).ToList();
+
+            return ServiceResponse<List<TaskTypeDTO>>.Ok(taskTypeDtos, null);
+        }
     }
 }

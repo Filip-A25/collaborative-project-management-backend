@@ -9,9 +9,9 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
         public required string Title { get; set; }
         public string? Description { get; set; }
         public ProjectMemberDTO? Creator { get; set; }
-        public ProjectMemberDTO? AssignedUser { get; set; }
-        public required TaskPriority Priority { get; set; }
-        public required TaskStatus Status { get; set; }
+        public ProjectMemberDTO? AssignedTo { get; set; }
+        public required string Priority { get; set; }
+        public required string Status { get; set; }
         public TaskType? Type { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? DueDate { get; set; }
@@ -24,9 +24,9 @@ namespace CollaborativeProjectManagement.Application.DTOs.Tasks
             Title = task.Title,
             Description = task.Description,
             Creator = ProjectMemberDTO.FromEntity(task.Creator),
-            AssignedUser = ProjectMemberDTO.FromEntity(task.AssignedUser),
-            Priority = task.Priority,
-            Status = task.Status,
+            AssignedTo = ProjectMemberDTO.FromEntity(task.AssignedUser),
+            Priority = task.Priority.ToString(),
+            Status = task.Status.ToString(),
             Type = task.Type,
             StartDate = task.StartDate,
             DueDate = task.DueDate,

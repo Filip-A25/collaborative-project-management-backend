@@ -50,5 +50,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
                 .Where(type => type.ProjectId == projectId)
                 .FirstOrDefaultAsync(type => type.Id == typeId);
         }
+
+        public async Task<List<TaskType>> GetTaskTypesAsync(Guid projectId)
+        {
+            return await _dbContext.TaskTypes.Where(type => type.ProjectId == projectId).ToListAsync();
+        }
     }
 }
