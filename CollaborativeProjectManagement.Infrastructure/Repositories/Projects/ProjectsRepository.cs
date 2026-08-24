@@ -72,7 +72,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
                 .FirstOrDefaultAsync(project => project.Id == projectId);
         }
 
-        public async Task<List<Guid>?> GetAllProjectIdsForUserAsync(Guid userId)
+        public async Task<List<Guid>> GetAllProjectIdsForUserAsync(Guid userId)
         {
             return await _dbContext.ProjectMembers
                 .Where(member => member.UserId == userId)
@@ -112,6 +112,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         {
             return await _dbContext.ProjectMembers
                 .Include(member => member.ProjectRole)
+                .Include(member => member.User)
                 .FirstOrDefaultAsync(member => member.Id == memberId);
         }
 
@@ -125,6 +126,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
         public async Task UpdateProjectAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<string?> GetProjectNameAsync(Guid projectId)
+        {
+            return await _dbContext.Projects
+                .Where(project => project.Id == projectId)
+                .Select(project => project.Name)
+                .FirstOrDefaultAsync();
         }
     }
 }

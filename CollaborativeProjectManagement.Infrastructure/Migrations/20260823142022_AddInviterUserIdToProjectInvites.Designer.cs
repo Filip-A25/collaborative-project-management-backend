@@ -4,6 +4,7 @@ using CollaborativeProjectManagement.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CollaborativeProjectManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260823142022_AddInviterUserIdToProjectInvites")]
+    partial class AddInviterUserIdToProjectInvites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,7 +216,8 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
 
                     b.HasIndex("InviterUserId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId", "InvitedUserId")
+                        .IsUnique();
 
                     b.ToTable("ProjectInvites");
                 });
@@ -446,15 +450,13 @@ namespace CollaborativeProjectManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.Project", "Project")
+                    b.HasOne("CollaborativeProjectManagement.Domain.Entities.Projects.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("InviterUser");
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("CollaborativeProjectManagement.Domain.Entities.Projects.ProjectMember", b =>

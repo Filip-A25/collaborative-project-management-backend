@@ -41,12 +41,14 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Projects
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<ProjectInvite>?> GetAllUserInvitesAsync(Guid userId)
+        public async Task<List<ProjectInvite>> GetAllUserInvitesAsync(Guid userId)
         {
             return await _dbContext.ProjectInvites
                 .Where(invite => invite.InvitedUserId == userId)
                 .Where(invite => invite.ExpiresAt > DateTime.UtcNow)
                 .Where(invite => !invite.IsAccepted)
+                .Include(invite => invite.InviterUser)
+                .Include(invite => invite.Project)
                 .ToListAsync();
         }
 

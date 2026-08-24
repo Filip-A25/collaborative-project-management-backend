@@ -8,7 +8,7 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Projects
         Task DeleteProjectInviteAsync(Guid projectId, int inviteId);
         Task<ProjectInvite?> GetProjectInviteAsync(Guid projectId, int inviteId);
         Task UpdateProjectInviteToAcceptedAsync(ProjectInvite invite);
-        Task<List<ProjectInvite>?> GetAllUserInvitesAsync(Guid userId);
+        Task<List<ProjectInvite>> GetAllUserInvitesAsync(Guid userId);
         Task<List<ProjectInvite>?> GetAllProjectsInvitesAsync(Guid projectId);
     }
 }
