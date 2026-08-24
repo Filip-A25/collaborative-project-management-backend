@@ -72,7 +72,7 @@ namespace CollaborativeProjectManagement.Api.Controllers
             try
             {
                 Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                ServiceResponse<List<ProjectInvite>?> response = await _projectInvitesService.GetAllUserInvitesAsync(userId);
+                ServiceResponse<List<ProjectInviteDTO>?> response = await _projectInvitesService.GetAllUserInvitesAsync(userId);
                 return HandleResponse(response);
             }
             catch

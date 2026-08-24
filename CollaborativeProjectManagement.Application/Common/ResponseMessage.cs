@@ -63,6 +63,7 @@
             // Error messages
             public const string UsersNotFound = "Users could not be found.";
             public const string Expired = "Unable to update the invite. Invite has expired.";
+            public const string InviteNotFound = "Invite not found.";
 
             // Unauthorized invites errors
             public const string InvitesCreateError = "User does not have sufficient permissions to create invites.";

@@ -43,9 +43,10 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             modelBuilder.Entity<ProjectMember>().HasOne(member => member.ProjectRole).WithMany().HasForeignKey(member => member.ProjectRoleId).OnDelete(DeleteBehavior.Restrict);
 
             // Project invite relationships
-            modelBuilder.Entity<ProjectInvite>().HasOne<Project>().WithMany().HasForeignKey(invite => invite.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ProjectInvite>().HasOne(invite => invite.Project).WithMany().HasForeignKey(invite => invite.ProjectId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectInvite>().HasOne<User>().WithMany().HasForeignKey(invite => invite.InvitedUserId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ProjectInvite>().HasOne<ProjectRole>().WithMany().HasForeignKey(invite => invite.InvitedUserRoleId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProjectInvite>().HasOne(invite => invite.InviterUser).WithMany().HasForeignKey(invite => invite.InviterUserId).OnDelete(DeleteBehavior.NoAction);
 
             // Tasks relationships
             modelBuilder.Entity<ProjectTask>().HasOne(task => task.Creator).WithMany().HasForeignKey(task => task.CreatorId).OnDelete(DeleteBehavior.NoAction);
@@ -62,10 +63,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Database
             modelBuilder.Entity<ProjectMember>(builder =>
             {
                 builder.HasIndex(projectMember => new { projectMember.ProjectId, projectMember.UserId }).IsUnique();
-            });
-            modelBuilder.Entity<ProjectInvite>(builder =>
-            {
-                builder.HasIndex(invite => new { invite.ProjectId, invite.InvitedUserId }).IsUnique();
             });
             modelBuilder.Entity<User>(builder =>
             {

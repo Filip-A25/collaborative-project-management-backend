@@ -28,20 +28,20 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageRoles);
             if (!userHasSufficientPermissions) return ServiceResponse.Forbidden(ResponseMessage.ProjectInvites.InvitesCreateError);
 
-            User? invitedUser = await _userRepository.GetUserByIdAsync(request.InvitedUserId);
-
+            User? invitedUser = await _userRepository.GetUserByEmailAsync(request.InvitedUserEmail);
             if (invitedUser == null)
             {
                 return ServiceResponse.NotFound(ResponseMessage.Auth.UserNotFound);
             }
 
             List<ProjectMember>? currentMembers = await _projectsRepository.GetAllProjectMembersAsync(projectId);   
-            if (currentMembers != null && currentMembers.Any(member => member.UserId == request.InvitedUserId))
+            if (currentMembers != null && currentMembers.Any(member => member.User.Email == request.InvitedUserEmail))
             {
                 return ServiceResponse.Conflict(ResponseMessage.ProjectInvites.InvitesUserAlreadyMemberError);
             }
 
-            ProjectInvite newProjectInvite = new ProjectInvite(projectId, request.InvitedUserId, request.RoleId, request.ExpiresAt);
+            DateTime expiryTime = DateTime.UtcNow.AddDays(5);
+            ProjectInvite newProjectInvite = new ProjectInvite(projectId, userId, invitedUser.Id, request.RoleId, expiryTime);
 
             await _projectInvitesRepository.CreateProjectInviteAsync(newProjectInvite);
 
@@ -61,7 +61,19 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
         public async Task<ServiceResponse> AcceptProjectInviteAsync(Guid userId, Guid projectId, int inviteId)
         {
             ProjectInvite? invite = await _projectInvitesRepository.GetProjectInviteAsync(projectId, inviteId);
-            if (invite?.InvitedUserId != userId)
+            if (invite == null)
+            {
+                return ServiceResponse.NotFound(ResponseMessage.ProjectInvites.InviteNotFound);
+            }
+
+            User? invitedUser = await _userRepository.GetUserByIdAsync(invite.InvitedUserId);
+
+            if (invitedUser == null)
+            {
+                return ServiceResponse.NotFound(ResponseMessage.Auth.UserNotFound);
+            }
+
+            if (invitedUser.Id != userId)
             {
                 return ServiceResponse.InternalServerError(ResponseMessage.Common.InternalError);
             }
@@ -72,12 +84,6 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
                 return ServiceResponse.Gone(ResponseMessage.ProjectInvites.Expired);
             }
 
-            User? invitedUser = await _userRepository.GetUserByIdAsync(invite.InvitedUserId);
-            if (invitedUser == null)
-            {
-                return ServiceResponse.NotFound(ResponseMessage.Auth.UserNotFound);
-            }
-
             ProjectMember newProjectMember = new ProjectMember(invitedUser.Id, projectId, invite.InvitedUserRoleId);
             await _projectsRepository.AddMemberToProjectAsync(newProjectMember);
             await _projectInvitesRepository.UpdateProjectInviteToAcceptedAsync(invite);
@@ -85,10 +91,12 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             return ServiceResponse.Ok(ResponseMessage.ProjectInvites.AcceptSuccess);
         }
 
-        public async Task<ServiceResponse<List<ProjectInvite>?>> GetAllUserInvitesAsync(Guid userId)
+        public async Task<ServiceResponse<List<ProjectInviteDTO>>> GetAllUserInvitesAsync(Guid userId)
         {
-            List<ProjectInvite>? invites = await _projectInvitesRepository.GetAllUserInvitesAsync(userId);
-            return ServiceResponse<List<ProjectInvite>?>.Ok(invites, null);
+            List<ProjectInvite> invites = await _projectInvitesRepository.GetAllUserInvitesAsync(userId);
+            
+            List<ProjectInviteDTO> inviteDtos = invites.Select(invite => ProjectInviteDTO.FromEntity(invite)).ToList();
+            return ServiceResponse<List<ProjectInviteDTO>>.Ok(inviteDtos, null);
         }
 
         public async Task<ServiceResponse<List<ProjectInvite>?>> GetAllProjectsInvitesAsync(Guid userId, Guid projectId)

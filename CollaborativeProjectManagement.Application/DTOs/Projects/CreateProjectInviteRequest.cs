@@ -5,10 +5,8 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
     public class CreateProjectInviteRequest
     {
         [Required]
-        public Guid InvitedUserId { get; set; }
+        public required string InvitedUserEmail { get; set; }
         [Required]
         public required int RoleId { get; set; }
-        [Required]
-        public required DateTime ExpiresAt { get; set; }
     }
 }

@@ -105,11 +105,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
         public async Task<ServiceResponse<List<ProjectDTO>?>> GetAllProjectsForUserAsync(Guid userId)
         {
-            List<Guid>? projectIds = await _projectsRepository.GetAllProjectIdsForUserAsync(userId);
-            if (projectIds == null || !projectIds.Any())
-            {
-                return ServiceResponse<List<ProjectDTO>?>.NotFound(null, ResponseMessage.Projects.ProjectsDontExist);
-            }
+            List<Guid> projectIds = await _projectsRepository.GetAllProjectIdsForUserAsync(userId);
 
             List<Project> projects = await _projectsRepository.GetAllProjectsForUserAsync(projectIds);
             List<ProjectDTO> projectDtos = projects.Select(ProjectDTO.FromEntity).ToList();
@@ -119,13 +115,18 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
         public async Task<ServiceResponse> RemoveMemberFromProjectAsync(Guid userId, Guid projectId, int memberId)
         {
-            bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.RemoveMembers);
-            if (!userHasSufficientPermissions)
+            ProjectMember? targetMember = await _projectsRepository.GetProjectMemberByIdAsync(projectId, memberId);
+            bool isMemberRemovingHimself = userId == targetMember?.User.Id;
+
+            if (!isMemberRemovingHimself)
             {
-                return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectMembersRemoveError);
+                bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.RemoveMembers);   
+                if (!userHasSufficientPermissions)
+                {
+                    return ServiceResponse.Forbidden(ResponseMessage.Projects.ProjectMembersRemoveError);
+                }
             }
 
-            ProjectMember? targetMember = await _projectsRepository.GetProjectMemberByIdAsync(projectId, memberId);
             if (targetMember == null)
             {
                 ServiceResponse.NotFound(ResponseMessage.Projects.MemberNotFound);
