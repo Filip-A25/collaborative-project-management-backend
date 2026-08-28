@@ -126,7 +126,7 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
             targetTask.AssignedTo = request.AssignedTo ?? targetTask.AssignedTo;
             targetTask.Priority = priority;
             targetTask.Status = status;
-            targetTask.TypeId = request.TypeId ?? targetTask.TypeId;
+            targetTask.TypeId = request.Type ?? targetTask.TypeId;
             targetTask.StartDate = request.StartDate ?? targetTask.StartDate;
             targetTask.DueDate = request.DueDate ?? targetTask.DueDate;
 

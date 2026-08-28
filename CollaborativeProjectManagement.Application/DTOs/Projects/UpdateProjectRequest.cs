@@ -14,5 +14,6 @@ namespace CollaborativeProjectManagement.Application.DTOs.Projects
         public double? BudgetAmount { get; set; }
         public required string Status { get; set; }
         public List<UpdateProjectRoleRequest>? Roles { get; set; }
+        public int? Type { get; set; }
     }
 }
