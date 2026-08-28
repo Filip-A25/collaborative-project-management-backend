@@ -24,6 +24,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
                     .ThenInclude(member => member.User)
                 .Include(task => task.AssignedUser)
                     .ThenInclude(member => member.User)
+                .Include(task => task.Type)
                 .FirstOrDefaultAsync(createdTask => createdTask.Id == task.Id);
 
             return createdTask ?? task;
@@ -45,6 +46,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
                     .ThenInclude(member => member.User)
                 .Include(task => task.AssignedUser)
                     .ThenInclude(member => member.User)
+                .Include(task => task.Type)
                 .ToListAsync();
         }
 
@@ -55,6 +57,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
                     .ThenInclude(member => member.User)
                 .Include(task => task.AssignedUser)
                     .ThenInclude(member => member.User)
+                .Include(task => task.Type)
                 .FirstOrDefaultAsync(task => task.Id == taskId);
         }
 
