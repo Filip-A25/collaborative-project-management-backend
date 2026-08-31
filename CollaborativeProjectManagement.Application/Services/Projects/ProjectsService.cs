@@ -30,13 +30,6 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
 
             public async Task<ServiceResponse<ProjectDTO?>> CreateProjectAsync(Guid userId, CreateProjectRequest request)
         {
-            UserRole userRole = await _userRepository.GetUserRoleIdAsync(userId);
-
-            if (userRole != UserRole.Admin)
-            {
-                return ServiceResponse<ProjectDTO?>.Forbidden(null, ResponseMessage.Projects.AuthorizationError);
-            }
-
             var newProject = new Project(request.Name, userId, request.Description, ProjectStatus.Planning, request.StartDate, request.EndDate, request.Currency, request.BudgetAmount);
 
             await _projectsRepository.CreateProjectAsync(newProject);
@@ -164,6 +157,7 @@ namespace CollaborativeProjectManagement.Application.Services.Projects
             targetProject.Currency = request.Currency ?? targetProject.Currency;
             targetProject.BudgetAmount = request.BudgetAmount ?? targetProject.BudgetAmount;
             targetProject.Status = parsedStatus;
+            targetProject.CompletedDate = request.CompletedDate ?? targetProject.CompletedDate;
 
             if (request.Roles != null && request.Roles.Count > 0)
             {

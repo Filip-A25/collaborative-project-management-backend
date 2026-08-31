@@ -9,7 +9,6 @@ namespace CollaborativeProjectManagement.Domain.Interfaces.Auth
         Task<User?> GetUserByIdAsync(Guid userId);
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserByUsernameAsync(string username);
-        Task<UserRole> GetUserRoleIdAsync(Guid userId);
         Task<List<User>> GetUsersListByEmailAsync(List<string> userEmails);
         Task UpdateUserAsync();
         Task<bool> CheckForExistingUsernameAsync(Guid userId, string username);
