@@ -34,7 +34,7 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            var user = new User(request.FirstName, request.LastName, request.Username, request.Email, hashedPassword, UserRole.Member);
+            var user = new User(request.FirstName, request.LastName, request.Username, request.Email, hashedPassword);
 
             await _userRepository.CreateAsync(user);
 
@@ -75,8 +75,7 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
                 FirstName = requestedUser.FirstName,
                 LastName = requestedUser.LastName,
                 Username = requestedUser.Username,
-                Email = requestedUser.Email,
-                Role = requestedUser.Role
+                Email = requestedUser.Email
             };
 
             AuthResponseDTO authResult = new AuthResponseDTO
@@ -104,7 +103,6 @@ namespace CollaborativeProjectManagement.Application.Services.Auth
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("id", user.Id.ToString()),
                 new Claim("email", user.Email),
-                new Claim("role", user.Role.ToString()),
                 new Claim("firstName", user.FirstName),
                 new Claim("lastName", user.LastName),
                 new Claim("username", user.Username),

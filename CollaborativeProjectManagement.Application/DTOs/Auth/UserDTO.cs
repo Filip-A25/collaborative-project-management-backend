@@ -9,8 +9,7 @@ namespace CollaborativeProjectManagement.Application.DTOs.Auth
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string Email { get; set; }
-        public required UserRole Role { get; set; }
-
+        
         public static UserDTO FromEntity(User user) => new()
         {
             Id = user.Id,
@@ -18,7 +17,6 @@ namespace CollaborativeProjectManagement.Application.DTOs.Auth
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            Role = user.Role
         };
     }
 }

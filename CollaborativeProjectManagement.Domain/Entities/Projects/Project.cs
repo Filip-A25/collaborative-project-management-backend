@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CollaborativeProjectManagement.Domain.Entities.Projects
 {
@@ -22,8 +21,6 @@ namespace CollaborativeProjectManagement.Domain.Entities.Projects
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public DateOnly? CompletedDate { get; set; }
-        [Column(TypeName = "decimal(3, 2)")]
-        public decimal CompletionPercentage { get; set; }
         public double? BudgetAmount { get; set; }
         [MaxLength(3)]
         public string Currency { get; set; }

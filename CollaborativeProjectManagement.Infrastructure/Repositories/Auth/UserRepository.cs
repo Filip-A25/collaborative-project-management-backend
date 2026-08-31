@@ -49,14 +49,6 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Auth
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<UserRole> GetUserRoleIdAsync(Guid userId)
-        {
-            return await _dbContext.Users
-                .Where(u => u.Id == userId)
-                .Select(u => u.Role)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<List<User>> GetUsersListByEmailAsync(List<string> userEmails)
         {
             return await _dbContext.Users
