@@ -21,6 +21,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
 
             Comment? newComment = await _dbContext.Comments
                 .Include(selectedComment => selectedComment.Commenter)
+                    .ThenInclude(commenter => commenter.User)
                 .FirstOrDefaultAsync(selectedComment => selectedComment.Id == comment.Id);
 
             return comment;
@@ -39,6 +40,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             return await _dbContext.Comments
                 .Where(comment => comment.ProjectTaskId == taskId)
                 .Include(comment => comment.Commenter)
+                    .ThenInclude(commenter => commenter.User)
                 .FirstOrDefaultAsync(comment => comment.Id == commentId);
         }
 
@@ -52,6 +54,7 @@ namespace CollaborativeProjectManagement.Infrastructure.Repositories.Tasks
             return await _dbContext.Comments
                 .Where(comment => comment.ProjectTaskId == taskId)
                 .Include(comment => comment.Commenter)
+                    .ThenInclude(commenter => commenter.User)
                 .ToListAsync();
         }
     }
