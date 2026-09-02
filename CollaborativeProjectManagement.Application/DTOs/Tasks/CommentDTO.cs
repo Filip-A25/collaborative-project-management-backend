@@ -1,19 +1,22 @@
-﻿using CollaborativeProjectManagement.Application.DTOs.Projects;
-using CollaborativeProjectManagement.Domain.Entities.Tasks;
+﻿using CollaborativeProjectManagement.Domain.Entities.Tasks;
 
 namespace CollaborativeProjectManagement.Application.DTOs.Tasks
 {
     public class CommentDTO
     {
         public int Id { get; set; }
-        public ProjectMemberDTO Commenter { get; set; }
+        public string CommenterFirstName { get; set; }
+        public string CommenterLastName { get; set; }
+        public string CommenterUsername { get; set; }
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public static CommentDTO FromEntity(Comment comment) => new()
         {
             Id = comment.Id,
-            Commenter = ProjectMemberDTO.FromEntity(comment.Commenter),
+            CommenterFirstName = comment.Commenter.User.FirstName,
+            CommenterLastName = comment.Commenter.User.LastName,
+            CommenterUsername = comment.Commenter.User.Username,
             Text = comment.Text,
             CreatedAt = comment.CreatedAt
         };
