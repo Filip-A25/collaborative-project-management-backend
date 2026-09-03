@@ -2,7 +2,6 @@
 using CollaborativeProjectManagement.Application.DTOs.Tasks;
 using CollaborativeProjectManagement.Application.Interfaces.Projects;
 using CollaborativeProjectManagement.Application.Interfaces.Tasks;
-using CollaborativeProjectManagement.Domain.Entities.Auth;
 using CollaborativeProjectManagement.Domain.Entities.Projects;
 using CollaborativeProjectManagement.Domain.Entities.Tasks;
 using CollaborativeProjectManagement.Domain.Interfaces.Projects;
@@ -46,10 +45,15 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
 
         public async Task<ServiceResponse> DeleteTaskCommentAsync(Guid userId, Guid projectId, Guid taskId, int commentId)
         {
-            bool doesTaskExist = await CheckIfTaskExistsAsync(projectId, taskId);
-            if (!doesTaskExist)
+            Comment? targetComment = await _taskCommentsRepository.GetTaskCommentWithCommenterAsync(taskId, commentId);
+            if (targetComment == null)
             {
                 return ServiceResponse.NotFound(ResponseMessage.Tasks.TaskNotFound);
+            }
+
+            if (targetComment.Commenter.User.Id != userId)
+            {
+                return ServiceResponse.Forbidden(ResponseMessage.TaskComments.NoPermissionDelete);
             }
 
             bool userHasSufficientPermissions = await _projectAuthorizationService.CheckIfUserHasSufficientPermissionsAsync(projectId, userId, Permission.ManageTasks);
@@ -102,12 +106,6 @@ namespace CollaborativeProjectManagement.Application.Services.Tasks
 
             List<CommentDTO> allTaskCommentDtos = allTaskComments.Select(comment => CommentDTO.FromEntity(comment)).ToList();
             return ServiceResponse<List<CommentDTO>?>.Ok(allTaskCommentDtos, null);
-        }
-
-        private async Task<bool> CheckIfTaskExistsAsync(Guid projectId, Guid taskId)
-        {
-            ProjectTask? targetTask = await _tasksRepository.GetTaskAsync(projectId, taskId);
-            return targetTask != null ? true : false;
         }
 
         private async Task<int?> GetProjectMemberIdAsync(Guid projectId, Guid userId)
