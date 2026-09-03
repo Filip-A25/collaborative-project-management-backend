@@ -109,6 +109,7 @@
         {
             // Error messages
             public const string NoPermission = "You do not have permission to edit this comment.";
+            public const string NoPermissionDelete = "You do not have permission to delete this comment.";
             public const string BatchNotFound = "No task comments found.";
 
             // Unauthorized task comments errors
